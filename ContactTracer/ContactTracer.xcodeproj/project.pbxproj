@@ -15,6 +15,9 @@
 		E10BB7662509952700ADCFEA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E10BB7642509952700ADCFEA /* LaunchScreen.storyboard */; };
 		E10BB7712509952700ADCFEA /* ContactTracerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10BB7702509952700ADCFEA /* ContactTracerTests.swift */; };
 		E10BB77C2509952800ADCFEA /* ContactTracerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E10BB77B2509952800ADCFEA /* ContactTracerUITests.swift */; };
+		E19B3D38251938AA00B6A583 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19B3D37251938AA00B6A583 /* MapView.swift */; };
+		E19B3D3B25193B0300B6A583 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19B3D3A25193B0300B6A583 /* Coordinator.swift */; };
+		E19B3D3E251941EC00B6A583 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19B3D3D251941EC00B6A583 /* LocationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +52,9 @@
 		E10BB7772509952800ADCFEA /* ContactTracerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ContactTracerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E10BB77B2509952800ADCFEA /* ContactTracerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactTracerUITests.swift; sourceTree = "<group>"; };
 		E10BB77D2509952800ADCFEA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E19B3D37251938AA00B6A583 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		E19B3D3A25193B0300B6A583 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		E19B3D3D251941EC00B6A583 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +105,9 @@
 		E10BB7582509951700ADCFEA /* ContactTracer */ = {
 			isa = PBXGroup;
 			children = (
+				E19B3D3C251941D100B6A583 /* Managers */,
+				E19B3D3925193AC400B6A583 /* Coordinators */,
+				E1DBD6F8251937FB0082A234 /* Views */,
 				E10BB7592509951700ADCFEA /* AppDelegate.swift */,
 				E10BB75B2509951700ADCFEA /* SceneDelegate.swift */,
 				E10BB75D2509951700ADCFEA /* ContentView.swift */,
@@ -134,6 +143,30 @@
 				E10BB77D2509952800ADCFEA /* Info.plist */,
 			);
 			path = ContactTracerUITests;
+			sourceTree = "<group>";
+		};
+		E19B3D3925193AC400B6A583 /* Coordinators */ = {
+			isa = PBXGroup;
+			children = (
+				E19B3D3A25193B0300B6A583 /* Coordinator.swift */,
+			);
+			path = Coordinators;
+			sourceTree = "<group>";
+		};
+		E19B3D3C251941D100B6A583 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				E19B3D3D251941EC00B6A583 /* LocationManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		E1DBD6F8251937FB0082A234 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E19B3D37251938AA00B6A583 /* MapView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -268,7 +301,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				E10BB75A2509951700ADCFEA /* AppDelegate.swift in Sources */,
+				E19B3D38251938AA00B6A583 /* MapView.swift in Sources */,
+				E19B3D3E251941EC00B6A583 /* LocationManager.swift in Sources */,
 				E10BB75C2509951700ADCFEA /* SceneDelegate.swift in Sources */,
+				E19B3D3B25193B0300B6A583 /* Coordinator.swift in Sources */,
 				E10BB75E2509951700ADCFEA /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
