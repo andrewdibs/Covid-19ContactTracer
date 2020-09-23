@@ -20,18 +20,45 @@ class LocationManager: NSObject, ObservableObject {
         self.locationManager.delegate = self
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         self.locationManager.distanceFilter = kCLDistanceFilterNone
-        self.locationManager.requestWhenInUseAuthorization()
+        self.locationManager.requestAlwaysAuthorization()
         self.locationManager.startUpdatingLocation()
     }
 }
 
+// TODO: Create alert for authorization if not always on
+func checkAuthorizationStatus() {
+    switch CLLocationManager.authorizationStatus(){
+    case .authorizedWhenInUse:
+        // alert user to turn on always on authorization
+        break
+    case .authorizedAlways:
+        // authorization status is OK
+        break
+    case .restricted:
+        // alert user to turn on always on authorization
+        break
+    case .notDetermined:
+        // alert user to turn on always on authorization
+        break
+    case .denied:
+        // alert user to turn on always on authorization
+        break
+    @unknown default:
+        break
+    }
+}
+
+// Location Manager Delegate for location update
 extension LocationManager: CLLocationManagerDelegate{
-    
+    // updates location
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         guard let location = locations.last else{
             return
         }
         self.location = location
+    }
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        checkAuthorizationStatus()
     }
 }
