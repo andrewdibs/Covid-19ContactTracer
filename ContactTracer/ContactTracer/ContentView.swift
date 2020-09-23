@@ -12,37 +12,60 @@ import MapKit
 struct ContentView: View {
     
     @ObservedObject private var locationManager = LocationManager()
-    
+    @State var reporting = false
     var body: some View {
+        
+       
         
         // Recieve user coordinates from location manager
         let coordinate = self.locationManager.location != nil ? self.locationManager.location!.coordinate: CLLocationCoordinate2D()
         
+            
+        
+        
         func iHaveCovid() -> Void{
+            print("I have covid")
             //TODO:
+            // Prompt the user to double check if they meant to press the button
+            
             // Send signal to backend for covid positive case
+            
+            // Update screen to show that they have reported a covid instance
         }
         
         // return the main content view
         return ZStack{
+            // Background
+            Rectangle()
+                .foregroundColor(Color( red: 160/255, green: 45/255, blue: 45/255))
+                .edgesIgnoringSafeArea(.all)
+            
+            Rectangle()
+                .foregroundColor(Color( red: 160/255, green: 60/255, blue: 60/255))
+                .rotationEffect(Angle(degrees: 45))
+                .edgesIgnoringSafeArea(.all)
             VStack{
                 
                 // TODO Maybe add a graph for daily cases
-                Text("Display statistics and logo here ")
+                Text("Display statistics and logo here ").foregroundColor(Color.white)
                 
-                Button(action: {iHaveCovid()}) {
-                    Text("Press If Tested Positive For COVID-19")
+                
+                // COVID-19 report button
+                Button(action: {self.reporting = true}) {
+                    Text("REPORT COVID-19 POSITVE")
+                        .font(.headline)
                         .fontWeight(.heavy)
-                        .padding()
                         .multilineTextAlignment(.center)
-                        .foregroundColor(Color.white)
-                        .shadow(color: .black, radius: 0.1,x:2, y:2)
-                        .background(Color.red)
-                    .cornerRadius(40)
+                        .padding(.all, 20)
+                        .foregroundColor(.white)
+                        .background(Color( red: 224/255, green: 66/255, blue: 10/255))
+                        .cornerRadius(40)
+                        .lineLimit(5)
                     
                 }
                 .padding(.top, 350.0)
-                .shadow(color: .black, radius: 0.1,x:1,y:1)
+                
+                
                 Spacer()
                 MapView()
                     .padding()
@@ -54,7 +77,18 @@ struct ContentView: View {
             }
                 .padding()
             
-            
+        }
+        .alert(isPresented: $reporting) {
+            Alert(
+                title: Text("WARNING: If you have not been tested for COVID-19 plese press Do not report. Only report that you have COVID-19 if you have been tested and the results are positive."),
+                message: Text("Would you like to report your results?"),
+                primaryButton: Alert.Button.default(Text("I am COVID-19 Positive")){
+                    iHaveCovid()
+                    },
+                    secondaryButton: Alert.Button.cancel(Text("Do Not Report")){
+                    print("Report cancled")
+                    }
+            )
         }
         
     }
