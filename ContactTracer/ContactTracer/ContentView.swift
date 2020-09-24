@@ -26,9 +26,10 @@ struct ContentView: View {
         func iHaveCovid() -> Void{
             print("I have covid")
             //TODO:
-            // Prompt the user to double check if they meant to press the button
             
             // Send signal to backend for covid positive case
+            //let url = URL(string: "APIURL")
+            
             
             // Update screen to show that they have reported a covid instance
         }
@@ -37,17 +38,18 @@ struct ContentView: View {
         return ZStack{
             // Background
             Rectangle()
-                .foregroundColor(Color( red: 160/255, green: 45/255, blue: 45/255))
+                .foregroundColor(Color( red: 0/255, green: 128/255, blue: 255/255))
                 .edgesIgnoringSafeArea(.all)
             
             Rectangle()
-                .foregroundColor(Color( red: 160/255, green: 60/255, blue: 60/255))
+                .foregroundColor(Color( red: 102/255, green: 153/255, blue: 255/255))
                 .rotationEffect(Angle(degrees: 45))
                 .edgesIgnoringSafeArea(.all)
             VStack{
                 
                 // TODO Maybe add a graph for daily cases
-                Text("Display statistics and logo here ").foregroundColor(Color.white)
+                Image("whiteMask").resizable()
+                    .frame(width: 76.0, height: 76.0)
                 
                 
                 // COVID-19 report button
@@ -63,7 +65,7 @@ struct ContentView: View {
                         .lineLimit(5)
                     
                 }
-                .padding(.top, 350.0)
+                .padding(.top, 250.0)
                 
                 
                 Spacer()
@@ -72,11 +74,9 @@ struct ContentView: View {
                 Text("\(coordinate.latitude), \(coordinate.longitude)").foregroundColor(Color.white)
                     .multilineTextAlignment(.center)
                     .padding()
-                    .background(Color.blue)
-                    .cornerRadius(12)
+                    .background(Color(red: 224/255, green: 66/255, blue: 10/255))
+                    .cornerRadius(40)
             }
-                .padding()
-            
         }
         .alert(isPresented: $reporting) {
             Alert(
