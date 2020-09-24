@@ -20,7 +20,54 @@ struct ContentView: View {
         // Recieve user coordinates from location manager
         let coordinate = self.locationManager.location != nil ? self.locationManager.location!.coordinate: CLLocationCoordinate2D()
         
-            
+        func postCoordinates(){
+            //declare parameter as a dictionary which contains string as key and value combination. considering inputs are valid
+            let parameters: [String: String] = ["latitude": String(coordinate.latitude), "longitude": String(coordinate.longitude)]
+
+            //create the url with URL
+            guard let url = URL(string: "http://myServerName.com/api")else{return} //change the url
+
+            //create the session object
+            let session = URLSession.shared
+
+            //now create the URLRequest object using the url object
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST" //set http method as POST
+
+            do {
+                request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted) // pass dictionary to nsdata object and set it as request body
+
+            } catch let error {
+                print(error.localizedDescription)
+            }
+
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.addValue("application/json", forHTTPHeaderField: "Accept")
+
+            //create dataTask using the session object to send data to the server
+            let task = session.dataTask(with: request, completionHandler: { data, response, error in
+
+                guard error == nil else {
+                    return
+                }
+
+                guard let data = data else {
+                    return
+                }
+
+                do {
+                    //create json object from data
+                    if let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: Any] {
+                        print(json)
+                        // handle json...
+                    }
+
+                } catch let error {
+                    print(error.localizedDescription)
+                }
+            })
+            task.resume()
+        }
         
         
         func iHaveCovid() -> Void{
