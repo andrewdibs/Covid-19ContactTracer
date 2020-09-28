@@ -1,0 +1,45 @@
+package cap;
+import java.sql.*;
+public class tester {
+
+	public static void main(String[] args) throws SQLException {
+		
+		Connection myConn = null;
+		Statement myStmt = null;
+		ResultSet myRs = null;
+		
+		try {
+			//Class.forName("com.mysql.jdbc.Driver");
+			// 1. Get a connection to database
+			myConn = DriverManager.getConnection("jdbc:mysql://localhost:3308/sys", "root" , "password");
+			
+			// 2. Create a statement
+			myStmt = myConn.createStatement();
+			
+			// 3. Execute SQL query
+			myRs = myStmt.executeQuery("select * from people");
+			
+			// 4. Process the result set
+			while (myRs.next()) {
+				System.out.println(myRs.getString("fname") + ", " + myRs.getString("lname"));
+			}
+		}
+		catch (Exception exc) {
+			exc.printStackTrace();
+		}
+		finally {
+			if (myRs != null) {
+				myRs.close();
+			}
+			
+			if (myStmt != null) {
+				myStmt.close();
+			}
+			
+			if (myConn != null) {
+				myConn.close();
+			}
+		}
+	}
+
+}

@@ -1,0 +1,12 @@
+package cap;
+import java.util.Date;
+public class user 
+{
+private String hash;
+private double x;
+private double y;
+private Date time;
+private int sick;
+
+
+}
