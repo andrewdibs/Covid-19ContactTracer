@@ -24,7 +24,6 @@ public class tester {
 			
 			// 4. Process the result set
 			while (myRs.next()) {
-			//System.out.println(myRs.getString("hash") + ", " + myRs.getDouble("x") + "," + myRs.getDouble("y") + "," + myRs.getDate("time") + "," + myRs.getInt("infected"));
 			Users user = new Users(myRs.getString("hash"), myRs.getDouble("x"), myRs.getDouble("y"), myRs.getDate("time"), myRs.getInt("infected"));
 			userList.add(user);
 			}
@@ -45,16 +44,7 @@ public class tester {
 				myConn.close();
 			}
 		}
-		
-		//System.out.print(userList.toString());
-		//Tests ArrayList (FOR TESTING)
-		for(int i = 0; i < userList.size(); i++)
-		{
-			System.out.println(userList.get(i).toString());
-			//System.out.println(userList.get(i).getHash());
-			//System.out.print(userList.get(i).getX());
-			//System.out.print(userList.get(i).getY());
-		}
+
 	}
 
 }
