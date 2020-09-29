@@ -79,7 +79,7 @@ public void setSick(int sick) {
 //Allows us to print the object's contents in a coherent manner
 public String toString()
 {
-	return "Hash: " + hash + " x: " + x + " y: " + y + " time: " + time + " sick:" + sick;
+	return "{Hash: " + hash + " x: " + x + " y: " + y + " time: " + time + " sick:" + sick + "}";
 }
 
 }
