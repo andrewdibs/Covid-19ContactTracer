@@ -4,6 +4,7 @@ services:
     build: ./API
     command: npm start
     volumes:
+      #mounting local folder to the container
       - ./API:/usr/src/app
     ports:
       - "8080:8080"
@@ -11,15 +12,12 @@ services:
     image: mysql:5.7
     restart: always
     environment:
+      #Data base properties
       MYSQL_DATABASE: 'db'
-      # So you don't have to use root, but you can if you like
       MYSQL_USER: 'root'
-      # You can use whatever password you like
       MYSQL_PASSWORD: 'FairView112'
-      # Password for root access
       MYSQL_ROOT_PASSWORD: 'FairView112'
     ports:
-      # <Port exposed> : < MySQL Port running inside container>
       - '3306:8080'
     volumes:
       - my-db:/var/lib/mysql
