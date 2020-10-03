@@ -25,7 +25,7 @@ public class getData
 			
 			// 4. Process the result set
 			while (myRs.next()) {
-			Users user = new Users(myRs.getString("hash"), myRs.getDouble("x"), myRs.getDouble("y"), myRs.getDate("time"), myRs.getInt("infected"));
+			Users user = new Users(myRs.getInt("id"),myRs.getString("hash"), myRs.getDouble("x"), myRs.getDouble("y"), myRs.getDate("time"), myRs.getInt("healthy"));
 			userList.add(user);
 			}
 		}
