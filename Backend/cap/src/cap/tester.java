@@ -10,15 +10,21 @@ public class tester
 		ArrayList<Users> myUsers = new ArrayList<Users>();
 		ArrayList<Users> myInf = new ArrayList<Users>();
 		ArrayList<Users> myCont = new ArrayList<Users>();
-		
+		ArrayList<ArrayList<Users>> myTables = new ArrayList<ArrayList<Users>>();
 		ArrayList<String> use = new ArrayList<String>();
 		use = getUsers();
-		myUsers= getData(use);
-		myInf= getInfected(myUsers);
-		myCont= getContam(myUsers, myInf);
+		
+		myTables= getData(use);
+		myInf= getInfected(myTables);
+		
+		//myUsers= getData(use);
+		//myInf= getInfected(myUsers);
+		//myCont= getContam(myUsers, myInf);
 		
 		System.out.println("");
-		System.out.print(myUsers);
+		System.out.println(myInf);
+		System.out.println("");
+		System.out.print(myTables);
 	}
 	
 	public static ArrayList<String> getUsers() throws SQLException, ClassNotFoundException
@@ -64,13 +70,14 @@ public class tester
 		return allUsers;		
 	}	
 	
-	public static ArrayList<Users> getData(ArrayList<String> users) throws SQLException, ClassNotFoundException
+	public static ArrayList<ArrayList<Users>> getData(ArrayList<String> users) throws SQLException, ClassNotFoundException
 	{
 		Class.forName("com.mysql.jdbc.Driver"); 
 		Connection myConn = null;
 		Statement myStmt = null;
 		ResultSet myRs = null;
-		ArrayList<Users> userList = new ArrayList<>();
+		//ArrayList<Users> userList = new ArrayList<>();
+		ArrayList<ArrayList<Users>> tables = new ArrayList<ArrayList<Users>>();
 		
 		try {
 			// 1. Get a connection to database
@@ -83,11 +90,15 @@ public class tester
 			for(int i=0; i < users.size();i++) {
 				myRs = myStmt.executeQuery("select * from " + users.get(i));
 				
+				ArrayList<Users> userList = new ArrayList<>();
+				
 				//adds the entire database entry into our ArrayList<Users>
 				while (myRs.next()) {
 					Users user = new Users(myRs.getInt("id"),myRs.getString("hash"), myRs.getDouble("x"), myRs.getDouble("y"), myRs.getDate("time"), myRs.getInt("healthy"));
 					userList.add(user);
 					}
+				
+				tables.add(userList);
 			}
 		}
 		catch (Exception exc) {
@@ -106,25 +117,29 @@ public class tester
 				myConn.close();
 			}
 		}
-		return userList;
+		return tables;
 		
 	}
 	
-	public static ArrayList<Users> getInfected(ArrayList<Users> userList){
+	public static ArrayList<Users> getInfected(ArrayList<ArrayList<Users>> userList){
 		//Declare ArrayList that will hold infected users
 		ArrayList<Users> infList = new ArrayList<>();
 		
-		//Go through userList and add all sick users to a new ArrayList, then remove them from userList
+		//Loop through the initial arrayList and go through each table
 		for(int i=0; i < userList.size(); i++) {
-			if(userList.get(i).getSick() == 1) {
-				infList.add(userList.get(i));
-				userList.remove(i);
-			}
+			//Loop through the arrayList within the arrayList 
+			for(int j=0; j < userList.get(i).size(); j++) {
+				//If the user in the table is sick...
+				if(userList.get(i).get(j).getSick() == 1) {
+					//Add them to the array of sick users
+					infList.add(userList.get(i).get(j));
+				}
+			}			
 		}
 		
 		//for testing
-		System.out.println("Healthy: " + userList);
-	    System.out.println("Sick: " + infList);
+		//System.out.println("Healthy: " + userList);
+	    //System.out.println("Sick: " + infList);
 	    
 	    //Return the infected List
 		return infList;
