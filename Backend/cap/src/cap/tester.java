@@ -2,6 +2,8 @@ package cap;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
+
+import com.mysql.cj.x.protobuf.MysqlxResultset;
 public class tester 
 {
 	
@@ -16,6 +18,7 @@ public class tester
 		myTables= getData(use);
 		myInf= getInfected(myTables);
 		myCont= getContam(myTables, myInf);
+		updateContam(myCont);
 	}
 	
 	public static ArrayList<String> getUsers() throws SQLException, ClassNotFoundException
@@ -84,7 +87,7 @@ public class tester
 				
 				//adds the entire database entry into our ArrayList<Users>
 				while (myRs.next()) {
-					Users user = new Users(myRs.getInt("id"),myRs.getString("hash"), myRs.getDouble("x"), myRs.getDouble("y"), myRs.getDate("time"), myRs.getInt("healthy"));
+					Users user = new Users(myRs.getString("hash"), myRs.getDouble("x"), myRs.getDouble("y"), myRs.getDate("time"), myRs.getInt("healthy"), myRs.getInt("contam"));
 					userList.add(user);
 					}
 				
@@ -174,4 +177,47 @@ public class tester
 		System.out.println(contList);
 		return contList;
 	}
+	
+	//updated every table that has a potential contaminated user
+	//by inserting a blank statement, with the contaminated value changed to 1 
+	public static void updateContam(ArrayList<Users> contList) throws SQLException, ClassNotFoundException
+	{
+		//creating a connection
+		Class.forName("com.mysql.jdbc.Driver"); 
+		Connection myConn = null;
+		Statement myStmt = null;
+		
+		//creating an int to act as my insert statement
+		int insertQuery = 0;
+		try {
+			// 1. Get a connection to database
+			myConn = DriverManager.getConnection("jdbc:mysql://localhost:3308/capping", "root", "password");
+			
+			// 2. Create a statement
+			myStmt = myConn.createStatement();
+			
+			//going through the entire contList 
+			for(int i = 0; i < contList.size(); i++)
+			{
+				//inserting an empty entry to our contaminated table, with the contam at 1 to indicate an at risk individual
+				insertQuery = myStmt.executeUpdate("INSERT INTO " + contList.get(i).getHash() 
+						+ "(hash, x, y, time, healthy, contam) "
+						+ "VALUES ('" + contList.get(i).getHash() + "','0','0','0000:00:00 00:00:00','0','1');");
+			}					
+		}
+		catch (Exception exc) {
+			exc.printStackTrace();
+		}
+		finally {
+			
+			if (myStmt != null) {
+				myStmt.close();
+			}
+			
+			if (myConn != null) {
+				myConn.close();
+			}
+		}
+				
+}
 }
