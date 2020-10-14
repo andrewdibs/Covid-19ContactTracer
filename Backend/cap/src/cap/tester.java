@@ -13,6 +13,7 @@ public class tester
 		ArrayList<String> use = new ArrayList<String>();
 		ArrayList<Users> myInf = new ArrayList<Users>();
 		ArrayList<Users> myCont = new ArrayList<Users>();
+		
 		String sickUser = "abc";
 		use = getUsers();
 		myTables= getData(use);
@@ -139,7 +140,6 @@ public class tester
 	//getContam(x,y) -> takes full list of users and list of sick users and makes a new ArrayList of "contaminated" user
 	public static ArrayList<Users> getContam(ArrayList<ArrayList<Users>> userList, ArrayList<Users> infList)
 	{
-	
 		//Instantiate new ArrayList for contaminated users
 		ArrayList<Users> contList = new ArrayList<Users>();
 		
@@ -196,9 +196,9 @@ public class tester
 		Class.forName("com.mysql.jdbc.Driver"); 
 		Connection myConn = null;
 		Statement myStmt = null;
-		
 		//creating an int to act as my insert statement
 		int insertQuery = 0;
+		
 		try {
 			// 1. Get a connection to database
 			myConn = DriverManager.getConnection("jdbc:mysql://localhost:3308/capping", "root", "password");
@@ -212,7 +212,6 @@ public class tester
 				//inserting an empty entry to our contaminated table, with the contam at 1 to indicate an at risk individual
 				insertQuery = myStmt.executeUpdate("INSERT INTO " + contList.get(i).getHash() 
 						+ "(hash, x, y, time, healthy, contam) "
-						//CHANGE THE TIME TO NOT 0, THAT ALWAYS GIVES AN ERROR
 						+ "VALUES ('" + contList.get(i).getHash() + "','0','0','2000:01:01 01:01:01','0','1');");
 			}					
 		}
@@ -246,11 +245,9 @@ public class tester
 			// 2. Create a statement
 			myStmt = myConn.createStatement();
 			
-			//Goes through userList and we add from every single entry from our user's own tables
+			//Goes through userList and we add from every single entry from our user's own tables			
+				myRs = myStmt.executeQuery("Select * from " + hash);
 			
-				myRs = myStmt.executeQuery("select * from " + hash);
-				
-				
 				//adds the entire database entry into our ArrayList<Users>
 				while (myRs.next()) {
 					Users user = new Users(myRs.getString("hash"), myRs.getDouble("x"), myRs.getDouble("y"), myRs.getDate("time"), myRs.getInt("healthy"), myRs.getInt("contam"));
