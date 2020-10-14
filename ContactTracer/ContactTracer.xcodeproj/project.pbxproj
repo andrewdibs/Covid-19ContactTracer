@@ -18,6 +18,9 @@
 		E19B3D38251938AA00B6A583 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19B3D37251938AA00B6A583 /* MapView.swift */; };
 		E19B3D3B25193B0300B6A583 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19B3D3A25193B0300B6A583 /* Coordinator.swift */; };
 		E19B3D3E251941EC00B6A583 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19B3D3D251941EC00B6A583 /* LocationManager.swift */; };
+		E1C0761B25377EB3002E36CD /* SignUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1C0761A25377EB3002E36CD /* SignUp.swift */; };
+		E1C0761D25377ECA002E36CD /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1C0761C25377ECA002E36CD /* Login.swift */; };
+		E1C0761F2537B031002E36CD /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1C0761E2537B031002E36CD /* Home.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +58,9 @@
 		E19B3D37251938AA00B6A583 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		E19B3D3A25193B0300B6A583 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		E19B3D3D251941EC00B6A583 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		E1C0761A25377EB3002E36CD /* SignUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUp.swift; sourceTree = "<group>"; };
+		E1C0761C25377ECA002E36CD /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
+		E1C0761E2537B031002E36CD /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -165,6 +171,9 @@
 			isa = PBXGroup;
 			children = (
 				E19B3D37251938AA00B6A583 /* MapView.swift */,
+				E1C0761A25377EB3002E36CD /* SignUp.swift */,
+				E1C0761C25377ECA002E36CD /* Login.swift */,
+				E1C0761E2537B031002E36CD /* Home.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -300,12 +309,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1C0761B25377EB3002E36CD /* SignUp.swift in Sources */,
 				E10BB75A2509951700ADCFEA /* AppDelegate.swift in Sources */,
 				E19B3D38251938AA00B6A583 /* MapView.swift in Sources */,
 				E19B3D3E251941EC00B6A583 /* LocationManager.swift in Sources */,
+				E1C0761F2537B031002E36CD /* Home.swift in Sources */,
 				E10BB75C2509951700ADCFEA /* SceneDelegate.swift in Sources */,
 				E19B3D3B25193B0300B6A583 /* Coordinator.swift in Sources */,
 				E10BB75E2509951700ADCFEA /* ContentView.swift in Sources */,
+				E1C0761D25377ECA002E36CD /* Login.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
