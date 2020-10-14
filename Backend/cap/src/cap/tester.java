@@ -13,12 +13,15 @@ public class tester
 		ArrayList<String> use = new ArrayList<String>();
 		ArrayList<Users> myInf = new ArrayList<Users>();
 		ArrayList<Users> myCont = new ArrayList<Users>();
-		
+		String sickUser = "abc";
 		use = getUsers();
 		myTables= getData(use);
-		myInf= getInfected(myTables);
-		myCont= getContam(myTables, myInf);
-		updateContam(myCont);
+		myInf = searchDB(sickUser);
+		System.out.println(myInf);
+		//myInf= getInfected(myTables);
+		//myCont= getContam(myTables, myInf);
+		///updateContam(myCont);
+		
 	}
 	
 	public static ArrayList<String> getUsers() throws SQLException, ClassNotFoundException
@@ -69,7 +72,6 @@ public class tester
 		Connection myConn = null;
 		Statement myStmt = null;
 		ResultSet myRs = null;
-		//ArrayList<Users> userList = new ArrayList<>();
 		ArrayList<ArrayList<Users>> tables = new ArrayList<ArrayList<Users>>();
 		
 		try {
@@ -202,6 +204,7 @@ public class tester
 				//inserting an empty entry to our contaminated table, with the contam at 1 to indicate an at risk individual
 				insertQuery = myStmt.executeUpdate("INSERT INTO " + contList.get(i).getHash() 
 						+ "(hash, x, y, time, healthy, contam) "
+						//CHANGE THE TIME TO NOT 0, THAT ALWAYS GIVES AN ERROR
 						+ "VALUES ('" + contList.get(i).getHash() + "','0','0','0000:00:00 00:00:00','0','1');");
 			}					
 		}
@@ -220,4 +223,50 @@ public class tester
 		}
 				
 }
+	//given a hash, go to the DB and retrieve the information on that specific user
+	public static ArrayList<Users> searchDB(String hash) throws SQLException, ClassNotFoundException
+	{
+		Class.forName("com.mysql.jdbc.Driver"); 
+		Connection myConn = null;
+		Statement myStmt = null;
+		ResultSet myRs = null;
+		ArrayList<Users> sickUser = new ArrayList<Users>();
+		try {
+			// 1. Get a connection to database
+			myConn = DriverManager.getConnection("jdbc:mysql://localhost:3308/capping", "root" , "password");
+			
+			// 2. Create a statement
+			myStmt = myConn.createStatement();
+			
+			//Goes through userList and we add from every single entry from our user's own tables
+			
+				myRs = myStmt.executeQuery("select * from " + hash);
+				
+				
+				//adds the entire database entry into our ArrayList<Users>
+				while (myRs.next()) {
+					Users user = new Users(myRs.getString("hash"), myRs.getDouble("x"), myRs.getDouble("y"), myRs.getDate("time"), myRs.getInt("healthy"), myRs.getInt("contam"));
+					sickUser.add(user);
+					}			
+			
+		}
+		catch (Exception exc) {
+			exc.printStackTrace();
+		}
+		finally {
+			if (myRs != null) {
+				myRs.close();
+			}
+			
+			if (myStmt != null) {
+				myStmt.close();
+			}
+			
+			if (myConn != null) {
+				myConn.close();
+			}
+		}
+		return sickUser;
+		
+	}
 }
