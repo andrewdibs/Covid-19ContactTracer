@@ -17,9 +17,9 @@ public class tester
 		use = getUsers();
 		myTables= getData(use);
 		myInf = searchDB(sickUser);
-		System.out.println(myInf);
+		//System.out.println(myInf);
 		//myInf= getInfected(myTables);
-		//myCont= getContam(myTables, myInf);
+		myCont= getContam(myTables, myInf);
 		///updateContam(myCont);
 		
 	}
@@ -139,17 +139,20 @@ public class tester
 	//getContam(x,y) -> takes full list of users and list of sick users and makes a new ArrayList of "contaminated" user
 	public static ArrayList<Users> getContam(ArrayList<ArrayList<Users>> userList, ArrayList<Users> infList)
 	{
+	
 		//Instantiate new ArrayList for contaminated users
 		ArrayList<Users> contList = new ArrayList<Users>();
 		
 		//Loop through the initial arrayList and go through each table
-		for(int i=0; i < userList.size();i++) {
+		for(int i=0; i < userList.size();i++) 
+		{
 			//Loop through the arrayList within the arrayLIst
 			for(int j=0; j < userList.get(i).size(); j++) 
 			{
 				//For the whole length of j (infList)
 				for(int k= 0; k < infList.size(); k++) 
 				{
+									
 					//If the x-value of the healthy and sick user is within .000021 (6ft), go into next loop
 					if(userList.get(i).get(j).getX() - infList.get(k).getX() <= .000021 ||  infList.get(k).getX() - userList.get(i).get(j).getX() >= .000021)
 					{
@@ -161,18 +164,23 @@ public class tester
 							{
 								//If the user isn't already confirmed sick
 								if(userList.get(i).get(j).getSick() == 0)
-								//Then add that healthy user to the infected list...
-								contList.add(userList.get(i).get(j));
-								
-								//and remove the healthy user from the userList
-								//userList.remove(i);	
+								{
+									//if the hashes match, the program does not proceed 
+									if(userList.get(i).get(j).getHash().compareTo(infList.get(k).getHash()) != 0)
+									{	
+										//-System.out.println(userList.get(i).get(j).getHash() + " = " + infList.get(k).getHash() + "?");
+										//Then add that healthy user to the infected list...
+										contList.add(userList.get(i).get(j));
+									}
+								}
 							}
 						}
 					}
 				}
+			}
 				
 			}
-		}
+		
 				
 		//Return which users have been compromised for COVID
 		System.out.println("WARNING: These users may have COVID");
@@ -205,7 +213,7 @@ public class tester
 				insertQuery = myStmt.executeUpdate("INSERT INTO " + contList.get(i).getHash() 
 						+ "(hash, x, y, time, healthy, contam) "
 						//CHANGE THE TIME TO NOT 0, THAT ALWAYS GIVES AN ERROR
-						+ "VALUES ('" + contList.get(i).getHash() + "','0','0','0000:00:00 00:00:00','0','1');");
+						+ "VALUES ('" + contList.get(i).getHash() + "','0','0','2000:01:01 01:01:01','0','1');");
 			}					
 		}
 		catch (Exception exc) {
