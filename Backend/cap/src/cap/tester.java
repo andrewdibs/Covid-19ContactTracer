@@ -9,20 +9,8 @@ public class tester
 	
 	public static void main(String[] args) throws SQLException, ClassNotFoundException 
 	{
-		ArrayList<ArrayList<Users>> myTables = new ArrayList<ArrayList<Users>>();
-		ArrayList<String> use = new ArrayList<String>();
-		ArrayList<Users> myInf = new ArrayList<Users>();
-		ArrayList<Users> myCont = new ArrayList<Users>();
-		
-		String sickUser = "abc";
-		use = getUsers();
-		myTables= getData(use);
-		myInf = searchDB(sickUser);
-		//System.out.println(myInf);
-		//myInf= getInfected(myTables);
-		myCont= getContam(myTables, myInf);
-		///updateContam(myCont);
-		
+		String user = "abc";
+		runTest(user);
 	}
 	
 	public static ArrayList<String> getUsers() throws SQLException, ClassNotFoundException
@@ -273,5 +261,33 @@ public class tester
 		}
 		return sickUser;
 		
+	}
+	
+	private static void runTest(String sickUser) throws SQLException, ClassNotFoundException{
+		//Instantiate myTables, the ArrayList+ that will hold the values of each user in the database
+		ArrayList<ArrayList<Users>> myTables = new ArrayList<ArrayList<Users>>();
+		
+		//Instantiate use, the ArrayList<String> that holds the hash values of all the users in the database
+		ArrayList<String> use = new ArrayList<String>();
+		
+		//Instantiate myInf, the ArrayList<Users> that will hold the values of the specific sick user
+		ArrayList<Users> myInf = new ArrayList<Users>();
+		
+		//Instantiate myCont, the ArrayList<Users> that holds all the users who are contaminated (were in contact with a sick user)
+		ArrayList<Users> myCont = new ArrayList<Users>();
+		
+		//Call getUsers() to get an ArrayList of all the hash#s in the database
+		use = getUsers();
+		
+		//Call getData to create an ArrayList+ using the hash values collected by getUsers
+		myTables= getData(use);
+		
+		//Search for the sick user's data and load it into an ArrayList
+		myInf = searchDB(sickUser);
+		
+		//Determine the contaminated users using the full database and the infected user's data
+		myCont= getContam(myTables, myInf);
+		
+		System.out.println("Complete");
 	}
 }
