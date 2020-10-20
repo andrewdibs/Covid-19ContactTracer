@@ -1,9 +1,7 @@
 package cap;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 
-import com.mysql.cj.x.protobuf.MysqlxResultset;
 public class tester 
 {
 	
@@ -72,7 +70,7 @@ public class tester
 			
 			//Goes through userList and we add from every single entry from our user's own tables
 			for(int i=0; i < users.size();i++) {
-				myRs = myStmt.executeQuery("select hash, x, y, time, contam from " + users.get(i));
+				myRs = myStmt.executeQuery("select * from " + users.get(i));
 				
 				ArrayList<Users> userList = new ArrayList<>();
 				
@@ -198,8 +196,8 @@ public class tester
 				//inserting an empty entry to our contaminated table, with the contam at 1 to indicate an at risk individual
 				System.out.print("Adding to " + contList.get(i).getHash());
 				insertQuery = myStmt.executeUpdate("INSERT INTO " + contList.get(i).getHash() 
-						+ "(hash, x, y, time, healthy, contam) "
-						+ "VALUES ('" + contList.get(i).getHash() + "','0','0','2000:01:01 01:01:01','0','1');");
+						+ "(hash, x, y, time, contam) "
+						+ "VALUES ('" + contList.get(i).getHash() + "','0','0','2000:01:01 01:01:01','1');");
 			}					
 		}
 		catch (Exception exc) {
@@ -276,7 +274,7 @@ public class tester
 		//Instantiate myCont, the ArrayList<Users> that holds all the users who are contaminated (were in contact with a sick user)
 		ArrayList<Users> myCont = new ArrayList<Users>();
 			
-		//Call getUsers() to get an ArrayList of all the hash#s in the database
+		//Call getUsers() to get an ArrayList of all the hash's in the database
 		use = getUsers();
 		
 		//Call getData to create an ArrayList+ using the hash values collected by getUsers
@@ -288,7 +286,7 @@ public class tester
 		//Determine the contaminated users using the full database and the infected user's data
 		myCont= getContam(myTables, myInf);
 		
-		updateContam(myCont);
+		//updateContam(myCont);
 		
 		System.out.println("Complete");
 	}
