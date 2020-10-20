@@ -1,4 +1,4 @@
-package cap;
+package com.capping.javarest.javaRestApp;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -20,7 +20,7 @@ public class tester
 		ArrayList<String> allUsers = new ArrayList<String>();
 		try {
 			// 1. Get a connection to database
-			myConn = DriverManager.getConnection("jdbc:mysql://localhost:3308/cap", "root", "password");
+			myConn = DriverManager.getConnection("jdbc:mysql://db:3306/db", "root", "FairView112");
 			
 			// 2. Create a statement
 			myStmt = myConn.createStatement();
@@ -63,7 +63,7 @@ public class tester
 		
 		try {
 			// 1. Get a connection to database
-			myConn = DriverManager.getConnection("jdbc:mysql://localhost:3308/cap", "root" , "password");
+			myConn = DriverManager.getConnection("jdbc:mysql://db:3306/db", "root" , "FairView112");
 			
 			// 2. Create a statement
 			myStmt = myConn.createStatement();
@@ -76,7 +76,7 @@ public class tester
 				
 				//adds the entire database entry into our ArrayList<Users>
 				while (myRs.next()) {
-					Users user = new Users(myRs.getString("hash"), myRs.getDouble("x"), myRs.getDouble("y"), myRs.getDate("time"), myRs.getInt("contam"));
+					Users user = new Users(myRs.getString("hash"), myRs.getDouble("x"), myRs.getDouble("y"), myRs.getDate("datetime"), myRs.getInt("compromised"));
 					userList.add(user);
 					}
 				
@@ -185,7 +185,7 @@ public class tester
 		
 		try {
 			// 1. Get a connection to database
-			myConn = DriverManager.getConnection("jdbc:mysql://localhost:3308/cap", "root", "password");
+			myConn = DriverManager.getConnection("jdbc:mysql://db:3306/db", "root", "FairView112");
 			
 			// 2. Create a statement
 			myStmt = myConn.createStatement();
@@ -196,7 +196,7 @@ public class tester
 				//inserting an empty entry to our contaminated table, with the contam at 1 to indicate an at risk individual
 				System.out.print("Adding to " + contList.get(i).getHash());
 				insertQuery = myStmt.executeUpdate("INSERT INTO " + contList.get(i).getHash() 
-						+ "(hash, x, y, time, contam) "
+						+ "(hash, x, y, datetime, compromised) "
 						+ "VALUES ('" + contList.get(i).getHash() + "','0','0','2000:01:01 01:01:01','1');");
 			}					
 		}
@@ -225,7 +225,7 @@ public class tester
 		ArrayList<Users> sickUser = new ArrayList<Users>();
 		try {
 			// 1. Get a connection to database
-			myConn = DriverManager.getConnection("jdbc:mysql://localhost:3308/cap", "root" , "password");
+			myConn = DriverManager.getConnection("jdbc:mysql://db:3306/db", "root" , "FairView112");
 			
 			// 2. Create a statement
 			myStmt = myConn.createStatement();
@@ -236,7 +236,7 @@ public class tester
 				//adds the entire database entry into our ArrayList<Users>
 				while (myRs.next()) {
 					//EDIT
-					Users user = new Users(myRs.getString("hash"), myRs.getDouble("x"), myRs.getDouble("y"), myRs.getDate("time"), myRs.getInt("contam"));
+					Users user = new Users(myRs.getString("hash"), myRs.getDouble("x"), myRs.getDouble("y"), myRs.getDate("datetime"), myRs.getInt("compromised"));
 					sickUser.add(user);
 					}			
 			
@@ -261,7 +261,7 @@ public class tester
 		
 	}
 	
-	private static void runTest(String sickUser) throws SQLException, ClassNotFoundException{
+	public static void runTest(String sickUser) throws SQLException, ClassNotFoundException{
 		//Instantiate myTables, the ArrayList+ that will hold the values of each user in the database
 		ArrayList<ArrayList<Users>> myTables = new ArrayList<ArrayList<Users>>();
 		
@@ -286,7 +286,7 @@ public class tester
 		//Determine the contaminated users using the full database and the infected user's data
 		myCont= getContam(myTables, myInf);
 		
-		//updateContam(myCont);
+		updateContam(myCont);
 		
 		System.out.println("Complete");
 	}

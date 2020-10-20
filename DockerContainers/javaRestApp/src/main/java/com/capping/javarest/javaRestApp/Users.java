@@ -1,4 +1,4 @@
-package cap;
+package com.capping.javarest.javaRestApp;
 import java.util.Date;
 
 //User Object - Stores the values from the database

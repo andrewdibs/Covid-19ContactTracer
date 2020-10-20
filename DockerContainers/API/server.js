@@ -39,7 +39,7 @@ app.post('/user', function (req, res) {
     
     //sql commands to create a table for the user
     //might need to add hash column 
-    var sql = "CREATE TABLE " + req.body.hash + " (id int NOT NULL AUTO_INCREMENT, x VARCHAR(255), y VARCHAR(255), datetime DATETIME DEFAULT CURRENT_TIMESTAMP, compromised VARCHAR(1), PRIMARY KEY (id))";
+    var sql = "CREATE TABLE " + req.body.hash + " (id int NOT NULL AUTO_INCREMENT, hash VARCHAR(225), x VARCHAR(255), y VARCHAR(255), datetime DATETIME DEFAULT CURRENT_TIMESTAMP, compromised VARCHAR(1), PRIMARY KEY (id))";
     
     //sql commands to add user to user table
     var sql1 = "INSERT INTO users (hash, email, username, password) VALUES ('" + req.body.hash + "' , '" + req.body.email + "' , '" + req.body.username + "' , '" + req.body.password + "')";
@@ -67,10 +67,10 @@ app.put('/user', function (req, res) {
     
     //sql commands to add users data to specific user table
     // JOSH CHANGED req.body.healthy to req.body.datetime
-    var sql = "INSERT INTO " + req.body.hash + " (x, y, compromised) VALUES ('" + req.body.x + "', '" + req.body.y + "', '" + req.body.compromised + "')";
+    var sql = "INSERT INTO " + req.body.hash + " (hash, x, y, compromised) VALUES ('" + req.body.hash + "', '" + req.body.x + "', '" + req.body.y + "', '" + req.body.compromised + "')";
     
     if (req.body.datetime) {
-        sql = "INSERT INTO " + req.body.hash + " (x, y, datetime, compromised) VALUES ('" + req.body.x + "', '" + req.body.y + "', '" + req.body.datetime + "', '" + req.body.compromised + "')";
+        sql = "INSERT INTO " + req.body.hash + " (hash, x, y, datetime, compromised) VALUES ('" + req.body.hash + "', '" + req.body.x + "', '" + req.body.y + "', '" + req.body.datetime + "', '" + req.body.compromised + "')";
     }
     
     //sends sql commands to database
