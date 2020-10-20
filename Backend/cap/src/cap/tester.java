@@ -22,13 +22,13 @@ public class tester
 		ArrayList<String> allUsers = new ArrayList<String>();
 		try {
 			// 1. Get a connection to database
-			myConn = DriverManager.getConnection("jdbc:mysql://localhost:3308/capping", "root", "password");
+			myConn = DriverManager.getConnection("jdbc:mysql://localhost:3308/cap", "root", "password");
 			
 			// 2. Create a statement
 			myStmt = myConn.createStatement();
 			
 			// 3. Execute SQL query to get all of the current users hashes
-			myRs = myStmt.executeQuery("Select * from users");			
+			myRs = myStmt.executeQuery("Select hash from users");			
 			
 			// 4. Process the result set
 			while (myRs.next()) {
@@ -65,20 +65,20 @@ public class tester
 		
 		try {
 			// 1. Get a connection to database
-			myConn = DriverManager.getConnection("jdbc:mysql://localhost:3308/capping", "root" , "password");
+			myConn = DriverManager.getConnection("jdbc:mysql://localhost:3308/cap", "root" , "password");
 			
 			// 2. Create a statement
 			myStmt = myConn.createStatement();
 			
 			//Goes through userList and we add from every single entry from our user's own tables
 			for(int i=0; i < users.size();i++) {
-				myRs = myStmt.executeQuery("select * from " + users.get(i));
+				myRs = myStmt.executeQuery("select hash, x, y, time, contam from " + users.get(i));
 				
 				ArrayList<Users> userList = new ArrayList<>();
 				
 				//adds the entire database entry into our ArrayList<Users>
 				while (myRs.next()) {
-					Users user = new Users(myRs.getString("hash"), myRs.getDouble("x"), myRs.getDouble("y"), myRs.getDate("time"), myRs.getInt("healthy"), myRs.getInt("contam"));
+					Users user = new Users(myRs.getString("hash"), myRs.getDouble("x"), myRs.getDouble("y"), myRs.getDate("time"), myRs.getInt("contam"));
 					userList.add(user);
 					}
 				
@@ -105,6 +105,7 @@ public class tester
 		
 	}
 	
+	/*
 	public static ArrayList<Users> getInfected(ArrayList<ArrayList<Users>> userList){
 		//Declare ArrayList that will hold infected users
 		ArrayList<Users> infList = new ArrayList<>();
@@ -124,6 +125,7 @@ public class tester
 	    //Return the infected List
 		return infList;
 	}
+	*/
 	
 	//getContam(x,y) -> takes full list of users and list of sick users and makes a new ArrayList of "contaminated" user
 	public static ArrayList<Users> getContam(ArrayList<ArrayList<Users>> userList, ArrayList<Users> infList)
@@ -150,9 +152,6 @@ public class tester
 							//If the time that the healthy and sick user is equal...
 							if(userList.get(i).get(j).getTime().compareTo(infList.get(k).getTime()) == 0 )
 							{
-								//If the user isn't already confirmed sick
-								if(userList.get(i).get(j).getSick() == 0)
-								{
 									//if the hashes match, the program does not proceed 
 									if(userList.get(i).get(j).getHash().compareTo(infList.get(k).getHash()) != 0)
 									{	
@@ -160,7 +159,6 @@ public class tester
 										//Then add that healthy user to the infected list...
 										contList.add(userList.get(i).get(j));
 									}
-								}
 							}
 						}
 					}
@@ -189,7 +187,7 @@ public class tester
 		
 		try {
 			// 1. Get a connection to database
-			myConn = DriverManager.getConnection("jdbc:mysql://localhost:3308/capping", "root", "password");
+			myConn = DriverManager.getConnection("jdbc:mysql://localhost:3308/cap", "root", "password");
 			
 			// 2. Create a statement
 			myStmt = myConn.createStatement();
@@ -198,6 +196,7 @@ public class tester
 			for(int i = 0; i < contList.size(); i++)
 			{
 				//inserting an empty entry to our contaminated table, with the contam at 1 to indicate an at risk individual
+				System.out.print("Adding to " + contList.get(i).getHash());
 				insertQuery = myStmt.executeUpdate("INSERT INTO " + contList.get(i).getHash() 
 						+ "(hash, x, y, time, healthy, contam) "
 						+ "VALUES ('" + contList.get(i).getHash() + "','0','0','2000:01:01 01:01:01','0','1');");
@@ -228,7 +227,7 @@ public class tester
 		ArrayList<Users> sickUser = new ArrayList<Users>();
 		try {
 			// 1. Get a connection to database
-			myConn = DriverManager.getConnection("jdbc:mysql://localhost:3308/capping", "root" , "password");
+			myConn = DriverManager.getConnection("jdbc:mysql://localhost:3308/cap", "root" , "password");
 			
 			// 2. Create a statement
 			myStmt = myConn.createStatement();
@@ -238,7 +237,8 @@ public class tester
 			
 				//adds the entire database entry into our ArrayList<Users>
 				while (myRs.next()) {
-					Users user = new Users(myRs.getString("hash"), myRs.getDouble("x"), myRs.getDouble("y"), myRs.getDate("time"), myRs.getInt("healthy"), myRs.getInt("contam"));
+					//EDIT
+					Users user = new Users(myRs.getString("hash"), myRs.getDouble("x"), myRs.getDouble("y"), myRs.getDate("time"), myRs.getInt("contam"));
 					sickUser.add(user);
 					}			
 			
@@ -275,7 +275,7 @@ public class tester
 		
 		//Instantiate myCont, the ArrayList<Users> that holds all the users who are contaminated (were in contact with a sick user)
 		ArrayList<Users> myCont = new ArrayList<Users>();
-		
+			
 		//Call getUsers() to get an ArrayList of all the hash#s in the database
 		use = getUsers();
 		
@@ -287,6 +287,8 @@ public class tester
 		
 		//Determine the contaminated users using the full database and the infected user's data
 		myCont= getContam(myTables, myInf);
+		
+		updateContam(myCont);
 		
 		System.out.println("Complete");
 	}

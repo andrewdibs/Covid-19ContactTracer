@@ -15,7 +15,7 @@ public class getData
 		try {
 			//Class.forName("com.mysql.jdbc.Driver");
 			// 1. Get a connection to database
-			myConn = DriverManager.getConnection("jdbc:mysql://localhost:3308/capping", "root" , "password");
+			myConn = DriverManager.getConnection("jdbc:mysql://localhost:3308/cap", "root" , "password");
 			
 			// 2. Create a statement
 			myStmt = myConn.createStatement();
@@ -25,7 +25,7 @@ public class getData
 			
 			// 4. Process the result set
 			while (myRs.next()) {
-			Users user = new Users(myRs.getString("hash"), myRs.getDouble("x"), myRs.getDouble("y"), myRs.getDate("time"), myRs.getInt("healthy"), myRs.getInt("contam"));
+			Users user = new Users(myRs.getString("hash"), myRs.getDouble("x"), myRs.getDouble("y"), myRs.getDate("time"), myRs.getInt("contam"));
 			userList.add(user);
 			}
 		}
