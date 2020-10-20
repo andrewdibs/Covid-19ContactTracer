@@ -82,7 +82,7 @@ public class tester
 		return infList;
 	}
 	
-	//getContam(x,y) -> takes full list of users and list of sick users and makes a new ArrayList of "contaminated" user
+	//getContam(x,y) -> takes full list of users and list of sick user and makes a new ArrayList of "contaminated" user
 	public static ArrayList<Users> getContam(ArrayList<Users> userList, ArrayList<Users> infList)
 	{
 		//Instantiate new ArrayList for contaminated users
