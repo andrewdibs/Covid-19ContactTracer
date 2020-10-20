@@ -10,6 +10,7 @@ import SwiftUI
 import MapKit
 
 struct MapView: UIViewRepresentable {
+    
     func makeUIView(context: Context) -> MKMapView {
         let map = MKMapView()
         map.showsUserLocation = true

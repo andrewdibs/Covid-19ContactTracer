@@ -7,16 +7,19 @@
 //
 
 import SwiftUI
-
+import LocalAuthentication
 
 struct ContentView: View {
     
-   
+    // device ID
+    let hash = UIDevice.current.identifierForVendor?.uuidString
+    // Authentication state variable
     @State var logged = false
+    
     var body: some View {
         
-        NavigationView{
-            if (logged){
+        ZStack{
+            if (self.logged){
                 // return the main content view
                 Home()
             }
@@ -24,6 +27,28 @@ struct ContentView: View {
                 Login()
             }
             
+        }.onAppear(perform: authenticate)
+    }
+    
+    // Allows authentication with biometric faceID or touchID
+    func authenticate() {
+        let context = LAContext()
+        var error: NSError?
+        
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error){
+            let prompt = "To ensure your privacy allow faceID or touchID"
+            
+            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: prompt) { success, authenticationError in DispatchQueue.main.async{
+                    if success {
+                        self.logged = true
+                    }
+                    else {
+                        // error
+                    }
+                }
+            }
+        }else {
+            // no biometrics
         }
     }
         

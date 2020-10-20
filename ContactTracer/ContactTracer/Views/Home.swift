@@ -12,7 +12,7 @@ import MapKit
 struct Home: View {
     @ObservedObject private var locationManager = LocationManager()
     @State var reporting = false
-    
+    let hash = UIDevice.current.identifierForVendor?.uuidString
     
     var body: some View {
         // Recieve user coordinates from location manager
@@ -61,8 +61,8 @@ struct Home: View {
         func iHaveCovid() -> Void{
             print("I have covid")
             //TODO:
-            putCoordinates()
-            
+           
+            print(hash ?? "hello")
             // Update screen to show that they have reported a covid instance
         }
         
