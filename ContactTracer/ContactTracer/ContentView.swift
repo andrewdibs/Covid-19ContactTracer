@@ -22,12 +22,14 @@ struct ContentView: View {
             if (self.logged){
                 // return the main content view
                 Home()
+                
             }
             else {
                 Login()
             }
             
         }.onAppear(perform: authenticate)
+        
     }
     
     // Allows authentication with biometric faceID or touchID
@@ -41,14 +43,15 @@ struct ContentView: View {
             context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: prompt) { success, authenticationError in DispatchQueue.main.async{
                     if success {
                         self.logged = true
+                        print("authenticated")
                     }
                     else {
-                        // error
+                        print("faceid failed")
                     }
                 }
             }
         }else {
-            // no biometrics
+            print("biometrics not enabled")
         }
     }
         

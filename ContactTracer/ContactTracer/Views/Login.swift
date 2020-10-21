@@ -24,19 +24,32 @@ struct Login: View {
                 .edgesIgnoringSafeArea(.all)
             VStack{
                 
-                // TODO Maybe add a graph for daily cases
-                Image("whiteMask").resizable()
-                    .frame(width: 76.0, height: 76.0)
+                
+               
+                
+                
+                Text("Login")
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                    .font(.largeTitle)
+                    .padding()
                 
                 Spacer()
                 
-                Image(systemName: LAContext().biometryType == .faceID ? "faceid" : "touchid")
+                Image("whiteMask").resizable()
+                                   .frame(width: 200.0, height: 200.0)
+                
+                Spacer()
+                Image(systemName:  "faceid" )
                     .font(.largeTitle)
-                    .foregroundColor(.black)
+                    .foregroundColor(.white)
                     .padding()
+                
+                Text("Please enable faceID ")
+                    .foregroundColor(.white)
                     
                 
-                Spacer()
+                
             }
         }
         
