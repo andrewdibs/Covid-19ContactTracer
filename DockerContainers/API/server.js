@@ -42,11 +42,7 @@ app.post('/user', function (req, res) {
     var sql = "CREATE TABLE " + req.body.hash + " (id int NOT NULL AUTO_INCREMENT, hash VARCHAR(225), x VARCHAR(255), y VARCHAR(255), datetime DATETIME DEFAULT CURRENT_TIMESTAMP, compromised VARCHAR(1), PRIMARY KEY (id))";
     
     //sql commands to add user to user table
-    var sql1 = "INSERT INTO users (hash, email, username, password) VALUES ('" + req.body.hash + "' , '" + req.body.email + "' , '" + req.body.username + "' , '" + req.body.password + "')";
-    //^^ this statement is goiong to be
-    //var sql1 = "INSERT INTO users (hash, email, username, password) VALUES ('" + req.body.hash + "' , '" + 
-    // req.body.email + "' , '" + req.body.username + "' , '" + req.body.password + "')";
-    // Need to encrypt email, username, password (can be done on front-end or API)
+    var sql1 = "INSERT INTO users (hash) VALUES ('" + req.body.hash + "')";
     
     //sending the sql commands to the database
     con.query(sql, function (err, result) {
@@ -65,12 +61,13 @@ app.put('/user', function (req, res) {
     console.log("PoopyButthole");
     console.log(req.body.hash);
     
+    var compromisedValue = 0;
     //sql commands to add users data to specific user table
     // JOSH CHANGED req.body.healthy to req.body.datetime
-    var sql = "INSERT INTO " + req.body.hash + " (hash, x, y, compromised) VALUES ('" + req.body.hash + "', '" + req.body.x + "', '" + req.body.y + "', '" + req.body.compromised + "')";
+    var sql = "INSERT INTO " + req.body.hash + " (hash, x, y, compromised) VALUES ('" + req.body.hash + "', '" + req.body.x + "', '" + req.body.y + "', '" + compromisedValue + "')";
     
     if (req.body.datetime) {
-        sql = "INSERT INTO " + req.body.hash + " (hash, x, y, datetime, compromised) VALUES ('" + req.body.hash + "', '" + req.body.x + "', '" + req.body.y + "', '" + req.body.datetime + "', '" + req.body.compromised + "')";
+        sql = "INSERT INTO " + req.body.hash + " (hash, x, y, datetime, compromised) VALUES ('" + req.body.hash + "', '" + req.body.x + "', '" + req.body.y + "', '" + req.body.datetime + "', '" + compromisedValue + "')";
     }
     
     //sends sql commands to database
