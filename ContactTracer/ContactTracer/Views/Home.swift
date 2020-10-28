@@ -10,17 +10,21 @@ import SwiftUI
 import MapKit
 
 struct Home: View {
-    @ObservedObject private var locationManager = LocationManager()
+    
     @State var reporting = false
-    let hash = UIDevice.current.identifierForVendor?.uuidString
+    @ObservedObject var user = User()
+    @ObservedObject var locationManager = LocationManager()
     
     var body: some View {
         // Recieve user coordinates from location manager
-        let coordinate = self.locationManager.location != nil ? self.locationManager.location!.coordinate: CLLocationCoordinate2D()
+        var coordinate = self.locationManager.location != nil ? self.locationManager.location!.coordinate: CLLocationCoordinate2D()
+        
+        // timer executes every 5 seconds
+        let timer = Timer.publish(every: 15, on: .main, in: .common).autoconnect()
         
         func putCoordinates(){
             //declare parameter as a dictionary which contains string as key and value combination. considering inputs are valid
-            let parameters: [String: String] = ["hash": "A342xce3sffHE324", "x": String(coordinate.latitude), "y": String(coordinate.longitude), "healthy": "0", "compromised": "0"]
+            let parameters: [String: String] = ["hash": user.hash, "x": String(coordinate.latitude), "y": String(coordinate.longitude)]
             //create the url with URL
             guard let url = URL(string: "http://10.10.9.180:8080/user")else{return} //change the url
             //create the session object
@@ -58,11 +62,53 @@ struct Home: View {
             task.resume()
         }
         
+        func getUserHash(){
+            //declare parameter as a dictionary which contains string as key and value combination. considering inputs are valid
+            
+            print("fire get")
+            let parameters: [String: String] = ["hash": user.hash]
+            //create the url with URL
+            guard let url = URL(string: "http://10.10.9.180:8080/user")else{return} //change the url
+            //create the session object
+            let session = URLSession.shared
+            //now create the URLRequest object using the url object
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET" //set http method as POST
+            do {
+                request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted) // pass dictionary to nsdata object and set it as request body
+            } catch let error {
+                print(error.localizedDescription)
+            }
+
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.addValue("application/json", forHTTPHeaderField: "Accept")
+
+            //create dataTask using the session object to send data to the server
+            let task = session.dataTask(with: request, completionHandler: { data, response, error in
+                guard error == nil else {
+                    return
+                }
+                guard let data = data else {
+                    return
+                }
+                do {
+                    //create json object from data
+                    if let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: Any] {
+                        print(json)
+                        // handle json...
+                    }
+                } catch let error {
+                    print(error.localizedDescription)
+                }
+            })
+            task.resume()
+        }
+        
         func iHaveCovid() -> Void{
             print("I have covid")
-            //TODO:
-           
-            print(hash ?? "hello")
+            //TODO: CREATE PATCH for covid 
+            user.healthy = 1
+            print(user.healthy)
             // Update screen to show that they have reported a covid instance
         }
         
@@ -99,6 +145,7 @@ struct Home: View {
                     .padding(.top, 250.0)
                     
                     
+                    
                     Spacer()
                     MapView()
                         .padding()
@@ -108,7 +155,11 @@ struct Home: View {
                         .background(Color(red: 224/255, green: 66/255, blue: 10/255))
                         .cornerRadius(40)
                 }
-            }
+            }.onReceive(timer, perform: { time in
+                print("fire put ")
+                getUserHash()
+                putCoordinates()
+            })
             .alert(isPresented: $reporting) {
                 Alert(
                     title: Text("WARNING: If you have not been tested for COVID-19 plese press Do not report. Only report that you have COVID-19 if you have been tested and the results are positive."),

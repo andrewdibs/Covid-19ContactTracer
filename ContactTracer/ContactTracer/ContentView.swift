@@ -8,11 +8,24 @@
 
 import SwiftUI
 import LocalAuthentication
+import Combine
+import MapKit
+
+class User: ObservableObject {
+    var didChange = PassthroughSubject<Void, Never>()
+    let hash: String = UIDevice.current.identifierForVendor?.uuidString ?? "hash"
+    var compromised = 0 { didSet{ didChange.send() } }
+    var healthy = 0 { didSet{ didChange.send() } }
+    var initilized = false { didSet{ didChange.send() } }
+   
+    
+}
+
 
 struct ContentView: View {
     
-    // device ID
-    let hash = UIDevice.current.identifierForVendor?.uuidString
+    
+   
     // Authentication state variable
     @State var logged = false
     
@@ -22,7 +35,6 @@ struct ContentView: View {
             if (self.logged){
                 // return the main content view
                 Home()
-                
             }
             else {
                 Login()
@@ -50,8 +62,6 @@ struct ContentView: View {
                     }
                 }
             }
-        }else {
-            print("biometrics not enabled")
         }
     }
         

@@ -11,6 +11,8 @@ import LocalAuthentication
 
 struct Login: View {
     
+    @ObservedObject var user = User()
+    
     var body: some View {
         
         ZStack{
@@ -23,11 +25,7 @@ struct Login: View {
                 .rotationEffect(Angle(degrees: 45))
                 .edgesIgnoringSafeArea(.all)
             VStack{
-                
-                
-               
-                
-                
+ 
                 Text("Login")
                     .fontWeight(.bold)
                     .foregroundColor(.white)
@@ -47,17 +45,24 @@ struct Login: View {
                 
                 Text("Please enable faceID ")
                     .foregroundColor(.white)
-                    
-                
-                
+  
             }
-        }
+        }.onAppear(perform: initilize)
         
+    }
+    func initilize(){
+        if (!user.initilized){
+            
+            print("posting")
+            postUserHash()
+            user.initilized = true
+        }
     }
     
     func postUserHash(){
         //declare parameter as a dictionary which contains string as key and value combination. considering inputs are valid
-        let parameters: [String: String] = ["hash": "A342xce3sffHE324"]
+        print("fire post" )
+        let parameters: [String: String] = ["hash": String(user.hash)]
         //create the url with URL
         guard let url = URL(string: "http://10.10.9.180:8080/user")else{return} //change the url
         //create the session object
