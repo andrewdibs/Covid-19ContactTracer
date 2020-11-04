@@ -11,8 +11,8 @@ import LocalAuthentication
 
 struct Login: View {
     
-    @ObservedObject var user = User()
-    
+    @ObservedObject var user: User
+
     var body: some View {
         
         ZStack{
@@ -51,6 +51,9 @@ struct Login: View {
         
     }
     func initilize(){
+        
+        getUserData()
+        
         if (!user.initilized){
             
             print("posting")
@@ -59,12 +62,15 @@ struct Login: View {
         }
     }
     
+    // POST
     func postUserHash(){
         //declare parameter as a dictionary which contains string as key and value combination. considering inputs are valid
         print("fire post" )
-        let parameters: [String: String] = ["hash": String(user.hash)]
+        let hashnodash = user.hash.replacingOccurrences(of: "-", with: "", options: NSString.CompareOptions.literal, range: nil)
+        print(hashnodash)
+        let parameters: [String: String] = ["hash": String("hello world")]
         //create the url with URL
-        guard let url = URL(string: "http://10.10.9.180:8080/user")else{return} //change the url
+        guard let url = URL(string: "http://192.168.1.64:8000/user")else{return} //change the url
         //create the session object
         let session = URLSession.shared
         //now create the URLRequest object using the url object
@@ -98,13 +104,18 @@ struct Login: View {
             }
         })
         task.resume()
+    } // END POST
+    
+    func getUserData(){
+        // initilizes user data
     }
+    
 }
 
 
 
 struct Login_Previews: PreviewProvider {
     static var previews: some View {
-        Login()
+        Login(user: User())
     }
 }

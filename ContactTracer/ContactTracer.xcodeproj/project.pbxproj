@@ -54,6 +54,7 @@
 		E10BB7772509952800ADCFEA /* ContactTracerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ContactTracerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E10BB77B2509952800ADCFEA /* ContactTracerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactTracerUITests.swift; sourceTree = "<group>"; };
 		E10BB77D2509952800ADCFEA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E19691B0255338C500795800 /* ContactTracer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ContactTracer.entitlements; sourceTree = "<group>"; };
 		E19B3D37251938AA00B6A583 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		E19B3D3A25193B0300B6A583 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		E19B3D3D251941EC00B6A583 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
@@ -109,6 +110,7 @@
 		E10BB7582509951700ADCFEA /* ContactTracer */ = {
 			isa = PBXGroup;
 			children = (
+				E19691B0255338C500795800 /* ContactTracer.entitlements */,
 				E19B3D3C251941D100B6A583 /* Managers */,
 				E19B3D3925193AC400B6A583 /* Coordinators */,
 				E1DBD6F8251937FB0082A234 /* Views */,
@@ -478,6 +480,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = ContactTracer/ContactTracer.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"ContactTracer/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
@@ -498,6 +501,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = ContactTracer/ContactTracer.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"ContactTracer/Preview Content\"";
 				DEVELOPMENT_TEAM = "";

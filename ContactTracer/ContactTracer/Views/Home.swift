@@ -12,21 +12,22 @@ import MapKit
 struct Home: View {
     
     @State var reporting = false
-    @ObservedObject var user = User()
+    @ObservedObject var user: User
     @ObservedObject var locationManager = LocationManager()
     
     var body: some View {
         // Recieve user coordinates from location manager
         var coordinate = self.locationManager.location != nil ? self.locationManager.location!.coordinate: CLLocationCoordinate2D()
+
         
-        // timer executes every 5 seconds
-        let timer = Timer.publish(every: 15, on: .main, in: .common).autoconnect()
-        
+        // PUT
         func putCoordinates(){
+             let hashnodash = user.hash.replacingOccurrences(of: "-", with: "", options: NSString.CompareOptions.literal, range: nil)
             //declare parameter as a dictionary which contains string as key and value combination. considering inputs are valid
-            let parameters: [String: String] = ["hash": user.hash, "x": String(coordinate.latitude), "y": String(coordinate.longitude)]
+            print("PUT")
+            let parameters: [String: String] = ["hash": "hashnodash", "x": String(coordinate.latitude), "y": String(coordinate.longitude)]
             //create the url with URL
-            guard let url = URL(string: "http://10.10.9.180:8080/user")else{return} //change the url
+            guard let url = URL(string: "http://148.100.161.79:8000/user")else{return} //change the url
             //create the session object
             let session = URLSession.shared
             //now create the URLRequest object using the url object
@@ -60,25 +61,22 @@ struct Home: View {
                 }
             })
             task.resume()
-        }
+        }// END PUT
         
+        // GET
         func getUserHash(){
             //declare parameter as a dictionary which contains string as key and value combination. considering inputs are valid
-            
+            let hashnodash = user.hash.replacingOccurrences(of: "-", with: "", options: NSString.CompareOptions.literal, range: nil)
             print("fire get")
-            let parameters: [String: String] = ["hash": user.hash]
+            
             //create the url with URL
-            guard let url = URL(string: "http://10.10.9.180:8080/user")else{return} //change the url
+            guard let url = URL(string: "http://192.168.1.64:8000/user/abc")else{return} //change the url
             //create the session object
             let session = URLSession.shared
             //now create the URLRequest object using the url object
             var request = URLRequest(url: url)
             request.httpMethod = "GET" //set http method as POST
-            do {
-                request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted) // pass dictionary to nsdata object and set it as request body
-            } catch let error {
-                print(error.localizedDescription)
-            }
+           
 
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             request.addValue("application/json", forHTTPHeaderField: "Accept")
@@ -88,29 +86,76 @@ struct Home: View {
                 guard error == nil else {
                     return
                 }
-                guard let data = data else {
-                    return
+                
+            //create json object from data
+            if let http = response as? HTTPURLResponse{
+                if (http.statusCode == 200){
+                    print("chillen")
+                    
+                }else if (http.statusCode == 204){
+                    //alert
+                    print("Your sick")
                 }
+                
+            }
+                
+            })
+            task.resume()
+        }// END GET
+        
+        // PATCH
+        func patchHash(){
+           //declare parameter as a dictionary which contains string as key and value combination. considering inputs are valid
+                let hashnodash = user.hash.replacingOccurrences(of: "-", with: "", options: NSString.CompareOptions.literal, range: nil)
+                print("fire get")
+                let parameters: [String: String] = ["hash": "abc"]
+                //create the url with URL
+                guard let url = URL(string: "http://148.100.161.79:8000/user")else{return} //change the url
+                //create the session object
+                let session = URLSession.shared
+                //now create the URLRequest object using the url object
+                var request = URLRequest(url: url)
+                request.httpMethod = "PATCH" //set http method as POST
                 do {
-                    //create json object from data
-                    if let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: Any] {
-                        print(json)
-                        // handle json...
-                    }
+                    request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted) // pass dictionary to nsdata object and set it as request body
                 } catch let error {
                     print(error.localizedDescription)
                 }
-            })
-            task.resume()
-        }
+
+                request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.addValue("application/json", forHTTPHeaderField: "Accept")
+
+                //create dataTask using the session object to send data to the server
+                let task = session.dataTask(with: request, completionHandler: { data, response, error in
+                    guard error == nil else {
+                        return
+                    }
+                    guard let data = data else {
+                        return
+                    }
+                    do {
+                        //create json object from data
+                        if let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String: Any] {
+                            print(json)
+                            // handle json...
+                        }
+                    } catch let error {
+                        print(error.localizedDescription)
+                    }
+                })
+                task.resume()
+            }// END PATCH
         
         func iHaveCovid() -> Void{
             print("I have covid")
             //TODO: CREATE PATCH for covid 
             user.healthy = 1
-            print(user.healthy)
+            patchHash()
             // Update screen to show that they have reported a covid instance
         }
+        
+//        getUserHash()
+//        putCoordinates()
         
         return ZStack{
                 // Background
@@ -155,11 +200,7 @@ struct Home: View {
                         .background(Color(red: 224/255, green: 66/255, blue: 10/255))
                         .cornerRadius(40)
                 }
-            }.onReceive(timer, perform: { time in
-                print("fire put ")
-                getUserHash()
-                putCoordinates()
-            })
+            }
             .alert(isPresented: $reporting) {
                 Alert(
                     title: Text("WARNING: If you have not been tested for COVID-19 plese press Do not report. Only report that you have COVID-19 if you have been tested and the results are positive."),
@@ -178,6 +219,6 @@ struct Home: View {
 
 struct Home_Previews: PreviewProvider {
     static var previews: some View {
-        Home()
+        Home(user: User())
     }
 }

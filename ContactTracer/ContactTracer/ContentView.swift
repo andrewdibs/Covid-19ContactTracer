@@ -14,6 +14,7 @@ import MapKit
 class User: ObservableObject {
     var didChange = PassthroughSubject<Void, Never>()
     let hash: String = UIDevice.current.identifierForVendor?.uuidString ?? "hash"
+
     var compromised = 0 { didSet{ didChange.send() } }
     var healthy = 0 { didSet{ didChange.send() } }
     var initilized = false { didSet{ didChange.send() } }
@@ -23,21 +24,20 @@ class User: ObservableObject {
 
 
 struct ContentView: View {
-    
-    
-   
+
     // Authentication state variable
     @State var logged = false
-    
+    @ObservedObject var user = User()
     var body: some View {
         
         ZStack{
             if (self.logged){
                 // return the main content view
-                Home()
+                Home(user: self.user)
             }
             else {
-                Login()
+                Login(user: self.user)
+                
             }
             
         }.onAppear(perform: authenticate)
