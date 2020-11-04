@@ -5,7 +5,7 @@ services:
     command: npm start
     volumes:
       #mounting local folder to the container
-      - ./API:/usr/src/app
+      - ./API:/usr/src/app:z
     ports:
       - "8000:8000"
   db:

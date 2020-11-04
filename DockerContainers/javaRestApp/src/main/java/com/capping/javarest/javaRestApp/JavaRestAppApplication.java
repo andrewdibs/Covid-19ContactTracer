@@ -13,12 +13,12 @@ public class JavaRestAppApplication extends tester {
 
 	@GetMapping("/backend")
 	public static void findSomething() {
-		System.out.println("AlexHasASmallPenis");
+		System.out.println("This is a test");
 	}
 
 	@GetMapping("/here")
 	public String getMessage() {
-		return "Alex Has A Small PeePee";
+		return "This is a test";
 	}
 
 	@RequestMapping(value = "/user" , method = RequestMethod.POST)

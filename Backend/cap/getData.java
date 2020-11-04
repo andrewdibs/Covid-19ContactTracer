@@ -4,29 +4,34 @@ import java.util.ArrayList;
 
 public class getData
 {
-	public static ArrayList<Users> getData() throws SQLException, ClassNotFoundException
+	public static ArrayList<ArrayList<Users>> getData(ArrayList<String> users) throws SQLException, ClassNotFoundException
 	{
 		Class.forName("com.mysql.jdbc.Driver"); 
 		Connection myConn = null;
 		Statement myStmt = null;
 		ResultSet myRs = null;
-		ArrayList<Users> userList = new ArrayList<>();
+		ArrayList<ArrayList<Users>> tables = new ArrayList<ArrayList<Users>>();
 		
 		try {
-			//Class.forName("com.mysql.jdbc.Driver");
 			// 1. Get a connection to database
-			myConn = DriverManager.getConnection("jdbc:mysql://localhost:3308/capping", "root" , "password");
+			myConn = DriverManager.getConnection("jdbc:mysql://localhost:3308/cap", "root" , "password");
 			
 			// 2. Create a statement
 			myStmt = myConn.createStatement();
 			
-			// 3. Execute SQL query
-			myRs = myStmt.executeQuery("select * from abc");
-			
-			// 4. Process the result set
-			while (myRs.next()) {
-			Users user = new Users(myRs.getString("hash"), myRs.getDouble("x"), myRs.getDouble("y"), myRs.getDate("time"), myRs.getInt("infected"));
-			userList.add(user);
+			//Goes through userList and we add from every single entry from our user's own tables
+			for(int i=0; i < users.size();i++) {
+				myRs = myStmt.executeQuery("select * from " + users.get(i));
+				
+				ArrayList<Users> userList = new ArrayList<>();
+				
+				//adds the entire database entry into our ArrayList<Users>
+				while (myRs.next()) {
+					Users user = new Users(myRs.getString("hash"), myRs.getDouble("x"), myRs.getDouble("y"), myRs.getDate("time"), myRs.getInt("contam"));
+					userList.add(user);
+					}
+				
+				tables.add(userList);
 			}
 		}
 		catch (Exception exc) {
@@ -45,9 +50,8 @@ public class getData
 				myConn.close();
 			}
 		}
+		return tables;
 		
-		return(userList);
-
 	}
 
 }

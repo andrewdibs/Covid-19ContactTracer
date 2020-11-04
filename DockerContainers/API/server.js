@@ -2,7 +2,8 @@ var express = require('express'); // Web Framework
 var app = express();
 var mysql = require('mysql');// MS Sql Server client
 
-parser = require("body-parser");
+
+const parser = require("body-parser");
 
 const request = require("request");
 
@@ -34,7 +35,7 @@ con.connect(function(err){
 
 //Create a user and add to database
 app.post('/user', function (req, res) {
-    console.log("PoopyFacehole");
+    console.log("Creating user");
     console.log(req.body.hash);
     
     //sql commands to create a table for the user
@@ -58,7 +59,7 @@ app.post('/user', function (req, res) {
 
 //adds userss coordinates to database
 app.put('/user', function (req, res) {
-    console.log("PoopyButthole");
+    console.log("Adding Info");
     console.log(req.body.hash);
     
     var compromisedValue = 0;
@@ -79,23 +80,28 @@ app.put('/user', function (req, res) {
 });
 
 //get users last data entry
-app.get('/user', function (req, res) {
-    console.log("PoopyBungehole");
-    console.log(req.body.hash);
+app.get('/user/:hash', function (req, res) {
+    console.log("Getting Info");
+    console.log(req.params.hash);
     
     //sql query to get the specific users last entry
-    var sql = "SELECT * FROM " + req.body.hash + " WHERE id=(SELECT max(id) FROM " + req.body.hash + ")";
+    var sql = "SELECT compromised FROM " + req.params.hash + " WHERE id=(SELECT max(id) FROM " + req.params.hash + ")";
     
     //queries the database
     con.query(sql, function (err, result) {
         if(err) throw err;
         console.log("data retrieved");
-        res.status(200).send(result);
+        let myVar = JSON.stringify(result);
+        if(myVar[17] == "1"){
+            res.status(202).send("you're not chilln")
+        } else {
+            res.status(200).send("you're chilln")
+        }
     });
 });
 
 app.patch('/user', function (req, res) {
-    console.log("PoopypantsMagee");
+    console.log("Finding Infected users");
     console.log(req.body.hash);
     request({ 
         url: "http://backend:8080/user",

@@ -8,17 +8,18 @@ private String hash = null;
 private double x = 0;
 private double y = 0;
 private Date time = null;
-private int sick = 0;
+private int contam = 0;
 
 //User Constructor:
-public Users(String hash, double x, double y, Date time, int sick) 
+public Users(String hash, double x, double y, Date time, int contam) 
 {
 	this.hash = hash;
 	this.x = x;
 	this.y = y;
 	this.time = time;
-	this.sick = sick;
+	this.contam = contam;
 }
+
 
 //-----Hash-----
 //getHash() - Getter statement for hash
@@ -64,22 +65,22 @@ public void setTime(Date time) {
 	this.time = time;
 }
 
-//-----sick-----
-//getSick() - Getter statement for sick
-public int getSick() {
-	return sick;
+//-----contam-----
+//getContam() - Getter statement for contam
+public int getContam() {
+	return contam;
 }
 
-//setSick() - Setter statement for sick
-public void setSick(int sick) {
-	this.sick = sick;
+//setContam() - Setter statement for contam
+public void setContam(int contam) {
+	this.contam = contam;
 }
 
 //----ToString()-----
 //Allows us to print the object's contents in a coherent manner
 public String toString()
 {
-	return "{Hash: " + hash + " x: " + x + " y: " + y + " time: " + time + " sick:" + sick + "}";
+	return "{Hash: " + hash + " x: " + x + " y: " + y + " time: " + time + " contam: " + contam + "}";
 }
 
 }
