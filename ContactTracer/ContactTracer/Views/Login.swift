@@ -12,7 +12,8 @@ import LocalAuthentication
 struct Login: View {
     
     @ObservedObject var user: User
-
+    @State private var initilized = UserDefaults.standard.integer(forKey: "init")
+    
     var body: some View {
         
         ZStack{
@@ -54,11 +55,12 @@ struct Login: View {
         
         getUserData()
         
-        if (!user.initilized){
+        if (initilized != 1){
             
-            print("posting")
-            postUserHash()
-            user.initilized = true
+            print("initial posting")
+            // dont post every time for testing
+            //postUserHash()
+            UserDefaults.standard.set(1, forKey: "init")
         }
     }
     

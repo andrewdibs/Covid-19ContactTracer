@@ -8,6 +8,7 @@
 
 import SwiftUI
 import MapKit
+import UserNotifications
 
 struct Home: View {
     
@@ -18,6 +19,12 @@ struct Home: View {
     var body: some View {
         // Recieve user coordinates from location manager
         var coordinate = self.locationManager.location != nil ? self.locationManager.location!.coordinate: CLLocationCoordinate2D()
+        
+        // Notification Handler
+        let center = UNUserNotificationCenter.current
+        center().requestAuthorization(options: [.alert, .sound]) { (granted, error) in
+            // authorization enabled
+        }
 
         
         // PUT
@@ -25,9 +32,9 @@ struct Home: View {
              let hashnodash = user.hash.replacingOccurrences(of: "-", with: "", options: NSString.CompareOptions.literal, range: nil)
             //declare parameter as a dictionary which contains string as key and value combination. considering inputs are valid
             print("PUT")
-            let parameters: [String: String] = ["hash": "hashnodash", "x": String(coordinate.latitude), "y": String(coordinate.longitude)]
+            let parameters: [String: String] = ["hash": "abc", "x": String(coordinate.latitude), "y": String(coordinate.longitude)]
             //create the url with URL
-            guard let url = URL(string: "http://148.100.161.79:8000/user")else{return} //change the url
+            guard let url = URL(string: "http://192.168.1.64:8000/user")else{return} //change the url
             //create the session object
             let session = URLSession.shared
             //now create the URLRequest object using the url object
@@ -92,9 +99,23 @@ struct Home: View {
                 if (http.statusCode == 200){
                     print("chillen")
                     
-                }else if (http.statusCode == 204){
+                }else if (http.statusCode == 202){
                     //alert
                     print("Your sick")
+                    self.user.compromised = 1
+                    // create notification content
+                    let content = UNMutableNotificationContent()
+                    content.title = "You have been exposed to COVID-19!"
+                    content.body = "Please take proper COVID-19 precautions."
+                    
+                    // create the notification request TODO: CHECK THE NIL TRIGGER
+                    let uuidString = UUID().uuidString
+                    let request = UNNotificationRequest(identifier: uuidString, content: content, trigger: nil)
+                    
+                    center().add(request) {(error) in
+                        // check for errors
+                        print("error in adding request to notification center")
+                    }
                 }
                 
             }
@@ -110,7 +131,7 @@ struct Home: View {
                 print("fire get")
                 let parameters: [String: String] = ["hash": "abc"]
                 //create the url with URL
-                guard let url = URL(string: "http://148.100.161.79:8000/user")else{return} //change the url
+                guard let url = URL(string: "http://192.168.1.64:8000/user")else{return} //change the url
                 //create the session object
                 let session = URLSession.shared
                 //now create the URLRequest object using the url object
@@ -154,8 +175,8 @@ struct Home: View {
             // Update screen to show that they have reported a covid instance
         }
         
-//        getUserHash()
-//        putCoordinates()
+        getUserHash()
+        putCoordinates()
         
         return ZStack{
                 // Background
@@ -169,36 +190,42 @@ struct Home: View {
                     .edgesIgnoringSafeArea(.all)
                 VStack{
                     
+                    
                     // TODO Maybe add a graph for daily cases
                     Image("whiteMask").resizable()
                         .frame(width: 76.0, height: 76.0)
                     
-                    
+                    Spacer()
                     // COVID-19 report button
                     Button(action: {self.reporting = true}) {
                         Text("REPORT COVID-19 POSITVE")
                             .font(.headline)
                             .fontWeight(.heavy)
                             .multilineTextAlignment(.center)
-                            .padding(.all, 20)
+                            .padding(.all, 30)
                             .foregroundColor(.white)
                             .background(Color( red: 224/255, green: 66/255, blue: 10/255))
-                            .cornerRadius(40)
+                            .cornerRadius(50)
                             .lineLimit(5)
                         
                     }
-                    .padding(.top, 250.0)
+                    .padding(.bottom, 50)
+                    .padding(.top, 250)
                     
                     
                     
                     Spacer()
-                    MapView()
-                        .padding()
-                    Text("\(coordinate.latitude), \(coordinate.longitude)").foregroundColor(Color.white)
-                        .multilineTextAlignment(.center)
-                        .padding()
-                        .background(Color(red: 224/255, green: 66/255, blue: 10/255))
-                        .cornerRadius(40)
+                    ZStack{
+                        MapView()
+                            
+                            .edgesIgnoringSafeArea(.bottom)
+                        Text("\(coordinate.latitude), \(coordinate.longitude)").foregroundColor(Color.white)
+                            .multilineTextAlignment(.center)
+                            .padding()
+                            .background(Color( red: 0/255, green: 128/255, blue: 255/255))
+                            .cornerRadius(40).padding(.top,250)
+                    }
+                    
                 }
             }
             .alert(isPresented: $reporting) {
