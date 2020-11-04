@@ -18,8 +18,7 @@ public class getContam
 				{
 					//For the whole length of j (infList)
 					for(int k= 0; k < infList.size(); k++) 
-					{
-										
+					{									
 						//If the x-value of the healthy and sick user is within .000021 (6ft), go into next loop
 						if(userList.get(i).get(j).getX() - infList.get(k).getX() <= .000021 ||  infList.get(k).getX() - userList.get(i).get(j).getX() >= .000021)
 						{
@@ -32,9 +31,12 @@ public class getContam
 										//if the hashes match, the program does not proceed 
 										if(userList.get(i).get(j).getHash().compareTo(infList.get(k).getHash()) != 0)
 										{	
-											//-System.out.println(userList.get(i).get(j).getHash() + " = " + infList.get(k).getHash() + "?");
-											//Then add that healthy user to the infected list...
-											contList.add(userList.get(i).get(j));
+											//Contam will only be 1 if its an inserted line. Ensure we are not comparing an inserted line to another inserted line
+											if(infList.get(k).getContam() != 1)
+											{
+												//Then add that healthy user to the infected list...
+												contList.add(userList.get(i).get(j));
+											}									
 										}
 								}
 							}

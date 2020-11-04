@@ -30,7 +30,7 @@ public class updateContam
 				for(int i = 0; i < contList.size(); i++)
 				{
 					//inserting an empty entry to our contaminated table, with the contam at 1 to indicate an at risk individual
-					System.out.print("Adding to " + contList.get(i).getHash());
+					System.out.println("Adding to " + contList.get(i).getHash());
 					insertQuery = myStmt.executeUpdate("INSERT INTO " + contList.get(i).getHash() 
 							+ "(hash, x, y, time, contam) "
 							+ "VALUES ('" + contList.get(i).getHash() + "','0','0','2000:01:01 01:01:01','1');");

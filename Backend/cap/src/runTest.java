@@ -7,7 +7,7 @@ public class runTest
 	
 	public static void main(String[] args) throws SQLException, ClassNotFoundException 
 	{
-		String user = "abc";
+		String user = "ghi";
 		runTest(user);
 	}
 	
@@ -37,7 +37,7 @@ public class runTest
 		//Determine the contaminated users using the full database and the infected user's data
 		myCont= getContam.getContam(myTables, myInf);
 		
-		//updateContam.updateContam(myCont);
+		updateContam.updateContam(myCont);
 		
 		System.out.println("Complete");
 	}
