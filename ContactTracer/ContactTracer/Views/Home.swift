@@ -12,6 +12,7 @@ import UserNotifications
 
 struct Home: View {
     
+    @State var exposed = false
     @State var reporting = false
     @ObservedObject var user: User
     @ObservedObject var locationManager = LocationManager()
@@ -19,14 +20,7 @@ struct Home: View {
     var body: some View {
         // Recieve user coordinates from location manager
         var coordinate = self.locationManager.location != nil ? self.locationManager.location!.coordinate: CLLocationCoordinate2D()
-        
-        // Notification Handler
-        let center = UNUserNotificationCenter.current
-        center().requestAuthorization(options: [.alert, .sound]) { (granted, error) in
-            // authorization enabled
-        }
 
-        
         // PUT
         func putCoordinates(){
              let hashnodash = user.hash.replacingOccurrences(of: "-", with: "", options: NSString.CompareOptions.literal, range: nil)
@@ -74,7 +68,7 @@ struct Home: View {
         func getUserHash(){
             //declare parameter as a dictionary which contains string as key and value combination. considering inputs are valid
             let hashnodash = user.hash.replacingOccurrences(of: "-", with: "", options: NSString.CompareOptions.literal, range: nil)
-            print("fire get")
+            print("GET")
             
             //create the url with URL
             guard let url = URL(string: "http://192.168.1.64:8000/user/abc")else{return} //change the url
@@ -103,19 +97,32 @@ struct Home: View {
                     //alert
                     print("Your sick")
                     self.user.compromised = 1
-                    // create notification content
-                    let content = UNMutableNotificationContent()
-                    content.title = "You have been exposed to COVID-19!"
-                    content.body = "Please take proper COVID-19 precautions."
+                    // show alert
+                    self.exposed = true
                     
-                    // create the notification request TODO: CHECK THE NIL TRIGGER
-                    let uuidString = UUID().uuidString
-                    let request = UNNotificationRequest(identifier: uuidString, content: content, trigger: nil)
-                    
-                    center().add(request) {(error) in
-                        // check for errors
-                        print("error in adding request to notification center")
-                    }
+//                    // Notification Handler
+//                    let center = UNUserNotificationCenter.current
+//                    center().requestAuthorization(options: [.alert, .sound,.badge]) { (granted, error) in
+//                        // authorization enabled
+//                        print("notification center enabled")
+//                    }
+//                    // create notification content
+//                    let content = UNMutableNotificationContent()
+//                    content.title = "You have been exposed to COVID-19!"
+//                    content.body = "Please take proper COVID-19 precautions."
+//                    content.sound = UNNotificationSound.default
+//                    content.setValue("YES", forKeyPath: "shouldAlwaysAlertWhileAppIsForeground")
+//                    content.badge = 1
+//
+//                    // create the notification request
+//                    let uuidString = UUID().uuidString
+//                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3, repeats: false)
+//                    let request = UNNotificationRequest(identifier: uuidString, content: content, trigger: trigger)
+//                    print(request.content.body)
+//                    center().add(request) {(error) in
+//                        // check for errors
+//                        print("ERROR: \(error?.localizedDescription)")
+//                    }
                 }
                 
             }
@@ -194,6 +201,14 @@ struct Home: View {
                     // TODO Maybe add a graph for daily cases
                     Image("whiteMask").resizable()
                         .frame(width: 76.0, height: 76.0)
+                        .alert(isPresented: $exposed) {
+                            Alert(
+                                title: Text("WARNING: You have been in contact with someone who tested positive for the COVID-19 virus. Please take the proper precautions."),
+                                dismissButton: Alert.Button.cancel(Text("Quarentine")){
+                                    // take any other action here
+                                    }
+                            )
+                        }
                     
                     Spacer()
                     // COVID-19 report button
@@ -211,9 +226,19 @@ struct Home: View {
                     }
                     .padding(.bottom, 50)
                     .padding(.top, 250)
-                    
-                    
-                    
+                    .alert(isPresented: $reporting) {
+                       Alert(
+                           title: Text("WARNING: If you have not been tested for COVID-19 plese press Do not report. Only report that you have COVID-19 if you have been tested and the results are positive."),
+                           message: Text("Would you like to report your results?"),
+                           primaryButton: Alert.Button.default(Text("I am COVID-19 Positive")){
+                               iHaveCovid()
+                               },
+                               secondaryButton: Alert.Button.cancel(Text("Do Not Report")){
+                               print("Report cancled")
+                               }
+                       )
+                   }
+
                     Spacer()
                     ZStack{
                         MapView()
@@ -227,19 +252,18 @@ struct Home: View {
                     }
                     
                 }
-            }
-            .alert(isPresented: $reporting) {
-                Alert(
-                    title: Text("WARNING: If you have not been tested for COVID-19 plese press Do not report. Only report that you have COVID-19 if you have been tested and the results are positive."),
-                    message: Text("Would you like to report your results?"),
-                    primaryButton: Alert.Button.default(Text("I am COVID-19 Positive")){
-                        iHaveCovid()
-                        },
-                        secondaryButton: Alert.Button.cancel(Text("Do Not Report")){
-                        print("Report cancled")
-                        }
-                )
-            }
+        // Background Process
+        }.onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)){
+            _ in
+            print("moving to the background")
+            
+        }
+        // Foreground
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)){
+            _ in
+            print("moving to the forerground")
+        }
+           // original alert
         }
     }
 
