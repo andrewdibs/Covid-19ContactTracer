@@ -7,7 +7,7 @@ public class runTest
 	
 	public static void main(String[] args) throws SQLException, ClassNotFoundException 
 	{
-		String user = "ghi";
+		String user = "abc";
 		runTest(user);
 	}
 	
