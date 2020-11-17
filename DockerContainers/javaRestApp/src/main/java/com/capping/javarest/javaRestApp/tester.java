@@ -130,6 +130,12 @@ public class tester
 	{
 		//Instantiate new ArrayList for contaminated users
 		ArrayList<Users> contList = new ArrayList<Users>();
+
+		//Create a Boolean ArrayList to see if a value has already been added
+		ArrayList<Boolean> checked = new ArrayList<Boolean>();
+		for(int c=0; c < userList.size(); c++){
+			checked.add(false);
+		}
 		
 		//Loop through the initial arrayList and go through each table
 		for(int i=0; i < userList.size();i++) 
@@ -140,30 +146,39 @@ public class tester
 				//For the whole length of j (infList)
 				for(int k= 0; k < infList.size(); k++) 
 				{
-									
-					//If the x-value of the healthy and sick user is within .000021 (6ft), go into next loop
-					if(userList.get(i).get(j).getX() - infList.get(k).getX() <= .000021 ||  infList.get(k).getX() - userList.get(i).get(j).getX() >= .000021)
-					{
-						//If the y-value of the healthy and sick user is within .000016 (6ft), go into next loop
-						if(userList.get(i).get(j).getY() - infList.get(k).getY() <= .000016 ||  infList.get(k).getY() - userList.get(i).get(j).getY() >= .000016)
+					if(checked.get(i) == false)
+					{				
+						//If the x-value of the healthy and sick user is within .000021 (6ft), go into next loop
+						if(userList.get(i).get(j).getX() - infList.get(k).getX() <= .000021 ||  infList.get(k).getX() - userList.get(i).get(j).getX() >= .000021)
 						{
-							//If the time that the healthy and sick user is equal...
-							if(userList.get(i).get(j).getTime().compareTo(infList.get(k).getTime()) == 0 )
+							//If the y-value of the healthy and sick user is within .000016 (6ft), go into next loop
+							if(userList.get(i).get(j).getY() - infList.get(k).getY() <= .000016 ||  infList.get(k).getY() - userList.get(i).get(j).getY() >= .000016)
 							{
+								//If the time that the healthy and sick user is equal...
+								if(userList.get(i).get(j).getTime().compareTo(infList.get(k).getTime()) == 0 )
+								{
 									//if the hashes match, the program does not proceed 
 									if(userList.get(i).get(j).getHash().compareTo(infList.get(k).getHash()) != 0)
-									{	
-										//-System.out.println(userList.get(i).get(j).getHash() + " = " + infList.get(k).getHash() + "?");
-										//Then add that healthy user to the infected list...
-										contList.add(userList.get(i).get(j));
+									{
+										//only compared if location is not null
+										if(infList.get(k).getContam() != 1)
+										{
+											//Add the healthy user to the contaminated list
+											contList.add(userList.get(i).get(j));
+
+											//And set the user as true to have been checked before
+											checked.set(i, true);
+										}
 									}
+								}
 							}
 						}
+
 					}
 				}
 			}
 				
-			}
+		}
 		
 				
 		//Return which users have been compromised for COVID
@@ -196,8 +211,8 @@ public class tester
 				//inserting an empty entry to our contaminated table, with the contam at 1 to indicate an at risk individual
 				System.out.print("Adding to " + contList.get(i).getHash());
 				insertQuery = myStmt.executeUpdate("INSERT INTO " + contList.get(i).getHash() 
-						+ "(hash, x, y, datetime, compromised) "
-						+ "VALUES ('" + contList.get(i).getHash() + "','0','0','2000:01:01 01:01:01','1');");
+						+ "(hash, x, y, compromised) "
+						+ "VALUES ('" + contList.get(i).getHash() + "','0','0','1');");
 			}					
 		}
 		catch (Exception exc) {

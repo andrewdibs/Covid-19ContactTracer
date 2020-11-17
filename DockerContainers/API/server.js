@@ -1,11 +1,10 @@
 var express = require('express'); // Web Framework
 var app = express();
 var mysql = require('mysql');// MS Sql Server client
-
-
-const parser = require("body-parser");
-
-const request = require("request");
+var nodemailer = require('nodemailer');
+const parser = require('body-parser');
+const request = require('request');
+const { json } = require('body-parser');
 
 app.use(parser.urlencoded({ extended: true }));
 
@@ -33,6 +32,15 @@ con.connect(function(err){
     console.log("connected");
 });
 
+//connects to email address we are using to send users emails
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'capping.contact.tracer@gmail.com',
+      pass: 'Omannamo!1'
+    }
+});
+
 //Create a user and add to database
 app.post('/user', function (req, res) {
     console.log("Creating user");
@@ -40,10 +48,13 @@ app.post('/user', function (req, res) {
     
     //sql commands to create a table for the user
     //might need to add hash column 
-    var sql = "CREATE TABLE " + req.body.hash + " (id int NOT NULL AUTO_INCREMENT, hash VARCHAR(225), x VARCHAR(255), y VARCHAR(255), datetime DATETIME DEFAULT CURRENT_TIMESTAMP, compromised VARCHAR(1), PRIMARY KEY (id))";
+    let sql = "CREATE TABLE " + req.body.hash + " (id int NOT NULL AUTO_INCREMENT, hash VARCHAR(225), x VARCHAR(255), y VARCHAR(255), datetime DATETIME DEFAULT CURRENT_TIMESTAMP, compromised VARCHAR(1), PRIMARY KEY (id))";
     
     //sql commands to add user to user table
-    var sql1 = "INSERT INTO users (hash) VALUES ('" + req.body.hash + "')";
+    let sql1 = "INSERT INTO users (hash, email) VALUES ('" + req.body.hash + "', '" + req.body.email + "')";
+
+    //creates event to delete 2 week old data
+    let sql2 = "CREATE EVENT expire" + req.body.hash + " ON SCHEDULE EVERY 24 HOUR DO DELETE FROM " + req.body.hash + " WHERE TIMESTAMPDIFF(DAY, " + req.body.hash + ".datetime, now()) > 14";
     
     //sending the sql commands to the database
     con.query(sql, function (err, result) {
@@ -53,6 +64,10 @@ app.post('/user', function (req, res) {
     con.query(sql1, function (err, result) {
         if(err) throw err;
         console.log("1 record inserted");
+    });
+    con.query(sql2, function (err, result) {
+        if(err) throw err;
+        console.log("daily deletion event created");
     });
     res.status(201).send("user created")
 });
@@ -83,17 +98,49 @@ app.put('/user', function (req, res) {
 app.get('/user/:hash', function (req, res) {
     console.log("Getting Info");
     console.log(req.params.hash);
+
+    //email options to send to user who has covid
+    let mailOptions = {
+        from: 'contact.tracing.capping@gmail.com',
+        to: 'placehoder@gmail.com',
+        subject: 'COVID WARNING',
+        text: 'You have been in contact with a person who has had covid within the last two weeks. \n https://www.cdc.gov/coronavirus/2019-ncov/if-you-are-sick/quarantine.html'
+    };
     
     //sql query to get the specific users last entry
-    var sql = "SELECT compromised FROM " + req.params.hash + " WHERE id=(SELECT max(id) FROM " + req.params.hash + ")";
+    let sql = "SELECT * FROM " + req.params.hash + " WHERE compromised = 1";
+
+    //sql for deleting the compromised field if one was found
+    let sql1 = "DELETE FROM " + req.params.hash + " WHERE compromised = 1";
     
-    //queries the database
+    //sql for getting email of user
+    let sql2 = "SELECT email FROM users WHERE hash = '" + req.params.hash + "'";
+
+    //queries the database for compromised values
     con.query(sql, function (err, result) {
         if(err) throw err;
         console.log("data retrieved");
-        let myVar = JSON.stringify(result);
-        if(myVar[17] == "1"){
-            res.status(202).send("you're not chilln")
+        //if compromised value is found send 202 status to user and then delete compromised value
+        if(result.length > 0){
+            res.status(202).send("you're not chilln");
+            con.query(sql1, function (err1, result1) {
+                if(err1) throw err1;
+                console.log("data deleted");
+            });
+            con.query(sql2, function (err2, result2) {
+                if(err2) throw err2;
+                let obj1 = result2[0].email
+                console.log(obj1);
+                mailOptions.to = obj1;
+                transporter.sendMail(mailOptions, function(error, info){
+                    if (error) {
+                      console.log(error);
+                    } else {
+                      console.log('Email sent: ' + info.response);
+                    }
+                });
+            });
+        //if no value is found send 200 status
         } else {
             res.status(200).send("you're chilln")
         }
@@ -110,8 +157,8 @@ app.patch('/user', function (req, res) {
         json: true,
         body: { "hash": req.body.hash},
         time: true
-    }, function (err, res, body) {
-        if (!err && res.statusCode == 200) {
+    }, function (err, res1, body) {
+        if (!err && res1.statusCode == 200) {
         // success
         }
         // failed
