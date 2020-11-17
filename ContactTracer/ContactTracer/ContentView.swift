@@ -13,11 +13,8 @@ import MapKit
 
 class User: ObservableObject {
     var didChange = PassthroughSubject<Void, Never>()
+    
     let hash: String = UIDevice.current.identifierForVendor?.uuidString ?? "hash"
-
-    var compromised = 0 { didSet{ didChange.send() } }
-    var healthy = 0 { didSet{ didChange.send() } }
-    //@State var initilized = UserDefaults.standard.integer(forKey: "email") { didSet{ didChange.send() } }
     var initilized = false { didSet{ didChange.send() } }
     
 }
@@ -36,16 +33,16 @@ struct ContentView: View {
         
         ZStack{
             if (self.logged){
-                
+                // if email not already configured display signup
                 if (!emailSet) {
                     Signup(user: self.user, emailSet: $emailSet)
-
                 }else{
                     // return the main content view
                     Home(user: self.user)
                 }
             }
             else{
+                //login every time user opens app
                 Login(user: self.user)
             }
             
@@ -93,7 +90,7 @@ struct Signup: View {
             print("fire post" )
             let hashnodash = user.hash.replacingOccurrences(of: "-", with: "", options: NSString.CompareOptions.literal, range: nil)
             print(hashnodash)
-            let parameters: [String: String] = ["hash": String("ahhhhhhhhhhhh"),"email": self.email]
+            let parameters: [String: String] = ["hash": String(hashnodash),"email": self.email]
             //create the url with URL
             guard let url = URL(string: "http://192.168.1.64:8000/user")else{return} //change the url
             //create the session object
@@ -134,6 +131,9 @@ struct Signup: View {
         func sendEmail(){
             user.initilized = true
             postUserHash()
+            
+            sleep(2)
+            
             self.emailSet = true
             UserDefaults.standard.set(1, forKey: "email")
             
@@ -142,11 +142,11 @@ struct Signup: View {
         return ZStack{
             
            Rectangle()
-               .foregroundColor(Color( red: 0/255, green: 128/255, blue: 255/255))
+               .foregroundColor(Color( red: 38/255, green: 143/255, blue: 135/255))
                .edgesIgnoringSafeArea(.all)
            
            Rectangle()
-               .foregroundColor(Color( red: 102/255, green: 153/255, blue: 255/255))
+               .foregroundColor(Color( red: 66/255, green: 165/255, blue: 157/255))
                .rotationEffect(Angle(degrees: 45))
                .edgesIgnoringSafeArea(.all)
            VStack{
@@ -165,7 +165,7 @@ struct Signup: View {
             VStack{
                 HStack(spacing: 15){
                     Image(systemName: "envelope.fill")
-                        .foregroundColor(Color(red: 0/255, green: 128/255, blue: 255/255))
+                        .foregroundColor(Color(red: 38/255, green: 143/255, blue: 135/255))
                     
                     TextField("Email Address", text: self.$email)
                         .foregroundColor(Color.white)
@@ -183,7 +183,7 @@ struct Signup: View {
                         .padding(.horizontal, 55)
                         .padding(.vertical)
                         .foregroundColor(.white)
-                        .background(Color( red: 0/255, green: 128/255, blue: 255/255))
+                        .background(Color( red: 38/255, green: 143/255, blue: 135/255))
                         .cornerRadius(20)
                         .lineLimit(5)
                     

@@ -18,11 +18,11 @@ struct Login: View {
         
         ZStack{
             Rectangle()
-                .foregroundColor(Color( red: 0/255, green: 128/255, blue: 255/255))
+                .foregroundColor(Color(red: 38/255, green: 143/255, blue: 135/255))
                 .edgesIgnoringSafeArea(.all)
             
             Rectangle()
-                .foregroundColor(Color( red: 102/255, green: 153/255, blue: 255/255))
+                .foregroundColor(Color( red: 66/255, green: 165/255, blue: 157/255))
                 .rotationEffect(Angle(degrees: 45))
                 .edgesIgnoringSafeArea(.all)
             VStack{

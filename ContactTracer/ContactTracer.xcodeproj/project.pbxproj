@@ -483,7 +483,7 @@
 				CODE_SIGN_ENTITLEMENTS = ContactTracer/ContactTracer.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"ContactTracer/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = VT24A7UHNZ;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = ContactTracer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -504,7 +504,7 @@
 				CODE_SIGN_ENTITLEMENTS = ContactTracer/ContactTracer.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"ContactTracer/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = VT24A7UHNZ;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = ContactTracer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
