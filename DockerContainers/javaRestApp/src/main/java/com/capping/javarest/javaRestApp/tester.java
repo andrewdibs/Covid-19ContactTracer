@@ -276,7 +276,7 @@ public class tester
 		
 	}
 	
-	public static void runTest(String sickUser) throws SQLException, ClassNotFoundException{
+	private static ArrayList<String> runTest(String sickUser) throws SQLException, ClassNotFoundException {
 		//Instantiate myTables, the ArrayList+ that will hold the values of each user in the database
 		ArrayList<ArrayList<Users>> myTables = new ArrayList<ArrayList<Users>>();
 		
@@ -303,6 +303,21 @@ public class tester
 		
 		updateContam(myCont);
 		
+		//Create an ArrayList<String> to hold the hashes
+		ArrayList<String> hashes = new ArrayList<String>();
+
+		//Go through the list of contaminated users and record the hash values
+		for(int x=0; x < myCont.size(); x++){
+			hashes.add(myCont.get(x).getHash());
+		}
+
+		//Print the hashes for testing
+		System.out.println(hashes);
+
+		//Indicate the test ran successfully in console
 		System.out.println("Complete");
+
+		//Return the list of hashes
+		return hashes;
 	}
 }
