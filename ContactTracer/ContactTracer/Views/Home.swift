@@ -19,10 +19,12 @@ struct Home: View {
     
     var body: some View {
         // Recieve user coordinates from location manager
-        var coordinate = self.locationManager.location != nil ? self.locationManager.location!.coordinate: CLLocationCoordinate2D()
-
+        let coordinate = self.locationManager.location != nil ? self.locationManager.location!.coordinate: CLLocationCoordinate2D()
         
-        
+        // timer set for 14 days that runs after being exposed or reporting positive
+        let timer = Timer.publish(every: 1209600, on: .main, in: .common).autoconnect()
+        let timer2 = Timer.publish(every: 1209600, on: .main, in: .common).autoconnect()
+ 
         // PUT
         func putCoordinates(){
              let hashnodash = user.hash.replacingOccurrences(of: "-", with: "", options: NSString.CompareOptions.literal, range: nil)
@@ -30,7 +32,7 @@ struct Home: View {
             print("PUT")
             let parameters: [String: String] = ["hash": String(hashnodash), "x": String(coordinate.latitude), "y": String(coordinate.longitude)]
             //create the url with URL
-            guard let url = URL(string: "http://192.168.1.64:8000/user")else{return} //change the url
+            guard let url = URL(string: "http://10.10.9.180:8000/user")else{return} //change the url
             //create the session object
             let session = URLSession.shared
             //now create the URLRequest object using the url object
@@ -73,7 +75,7 @@ struct Home: View {
             print("GET")
             
             //create the url with URL
-            guard let url = URL(string: "http://192.168.1.64:8000/user/\(hashnodash)")else{return} //change the url
+            guard let url = URL(string: "http://10.10.9.180:8000/user/\(hashnodash)")else{return} //change the url
             //create the session object
             let session = URLSession.shared
             //now create the URLRequest object using the url object
@@ -101,7 +103,6 @@ struct Home: View {
                     // show alert
                     self.exposed = true
                     UserDefaults.standard.set(true, forKey: "exposed")
-                    
 
                 }
                 
@@ -118,7 +119,7 @@ struct Home: View {
                 print("fire get")
                 let parameters: [String: String] = ["hash": String(hashnodash)]
                 //create the url with URL
-                guard let url = URL(string: "http://192.168.1.64:8000/user")else{return} //change the url
+                guard let url = URL(string: "http://10.10.9.180:8000/user")else{return} //change the url
                 //create the session object
                 let session = URLSession.shared
                 //now create the URLRequest object using the url object
@@ -154,6 +155,7 @@ struct Home: View {
                 task.resume()
             }// END PATCH
         
+        
         func iHaveCovid() -> Void{
             print("I have covid")
             //TODO: CREATE PATCH for covid 
@@ -162,9 +164,11 @@ struct Home: View {
             patchHash()
             // Update screen to show that they have reported a covid instance
         }
+        
+        // perform http requests
         if (coordinate.longitude != 0 && coordinate.latitude != 0){
-            getUserHash()
-            putCoordinates()
+                getUserHash()
+                putCoordinates()
         }
         
         
@@ -179,9 +183,7 @@ struct Home: View {
 //                    .rotationEffect(Angle(degrees: 45))
 //                    .edgesIgnoringSafeArea(.all)
                 VStack{
-                    
-                    
-                    // TODO Maybe add a graph for daily cases
+      
                     Image("whiteMask").resizable()
                         .frame(width: 76.0, height: 76.0)
                         .alert(isPresented: $exposed) {
@@ -207,17 +209,44 @@ struct Home: View {
                                 .fontWeight(.heavy)
                             Spacer()
                             // reported positive
-                            if (positive){
-                                Text("COVID-19 POSITVE")
-                                    .foregroundColor(Color(.white))
-                                    .fontWeight(.heavy)
-                                    .font(.system(size: 25))
-                            }else{
-                                Text("COVID-19 NEGATIVE")
-                                    .foregroundColor(Color(.white))
-                                    .font(.system(size: 25))
-                                    
+                            VStack{
+                                if (positive){
+                                    Text("COVID-19 POSITIVE")
+                                        .foregroundColor(Color(.white))
+                                        .fontWeight(.heavy)
+                                        .font(.system(size: 25))
+                                        .onReceive(timer){ _ in
+                                            print("covid reported expired")
+                                            self.positive = false
+                                            UserDefaults.standard.set(false, forKey: "positive")
+                                        }
+                                        
+                                }else{
+                                    Text("COVID-19 NEGATIVE")
+                                        .foregroundColor(Color(.white))
+                                        .font(.system(size: 25))
+                                        
+                                }
+                                if(self.positive){
+                                    Button(action: {
+                                        self.positive = false
+                                        UserDefaults.standard.set(false, forKey: "positive")
+                                    }) {
+                                        Text("report negative")
+                                            .padding(.all, 10)
+                                            .foregroundColor(.white)
+                                            .background(Color(red: 38/255, green: 143/255, blue: 135/255))
+                                            .cornerRadius(50)
+                                            .lineLimit(5)
+                                    }.disabled(!positive)
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal, 10)
+                                }
+                                
+                                
+                                
                             }
+                            
                             Spacer()
                             // exposed
                             if (exposed){
@@ -226,6 +255,11 @@ struct Home: View {
                                     .fontWeight(.heavy)
                                     .multilineTextAlignment(.center)
                                     .padding(.horizontal, 20)
+                                    .onReceive(timer2){ _ in
+                                        print("covid exposed expired")
+                                        self.exposed = true
+                                        UserDefaults.standard.set(true, forKey: "exposed")
+                                    }
                             }else{
                                 Text("You have not been in any confirmed contact with the COVID-19 Virus")
                                     .foregroundColor(Color(.white))
@@ -237,6 +271,7 @@ struct Home: View {
                             }
                             Spacer()
                         }.frame(width:380,height:200)
+                        .padding(.horizontal, 10)
                         
                     }
                     // COVID-19 report button
@@ -251,7 +286,7 @@ struct Home: View {
                             .cornerRadius(50)
                             .lineLimit(5)
                         
-                    }
+                    }.disabled(positive)
                     
                     .padding(.top)
                     

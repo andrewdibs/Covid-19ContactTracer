@@ -12,56 +12,55 @@ import BackgroundTasks
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-      // registerBackgroundTasks()
+        registerBackgroundTasks()
         // Override point for customization after application launch.
         print("finished launch")
         return true
     }
     
-//   func registerBackgroundTasks() {
-//      // Declared at the "Permitted background task scheduler identifiers" in info.plist
-//      let backgroundAppRefreshTaskSchedulerIdentifier = "com.example.fooBackgroundAppRefreshIdentifier"
-//      let backgroundProcessingTaskSchedulerIdentifier = "com.example.fooBackgroundProcessingIdentifier"
-//
-//      // Use the identifier which represents your needs
-//      BGTaskScheduler.shared.register(forTaskWithIdentifier: backgroundAppRefreshTaskSchedulerIdentifier, using: nil) { (task) in
-//         print("BackgroundAppRefreshTaskScheduler is executed NOW!")
-//         print("Background time remaining: \(UIApplication.shared.backgroundTimeRemaining)s")
-//         task.expirationHandler = {
-//           task.setTaskCompleted(success: false)
-//         }
+   func registerBackgroundTasks() {
+      // Declared at the "Permitted background task scheduler identifiers" in info.plist
+      let backgroundAppRefreshTaskSchedulerIdentifier = "get"
+     // let backgroundProcessingTaskSchedulerIdentifier = "com.example.fooBackgroundProcessingIdentifier"
 
-         // Do some data fetching and call setTaskCompleted(success:) asap!
-//         let isFetchingSuccess = true
-//         task.setTaskCompleted(success: isFetchingSuccess)
-//       }
-//     }
+      // Use the identifier which represents your needs
+      BGTaskScheduler.shared.register(forTaskWithIdentifier: backgroundAppRefreshTaskSchedulerIdentifier, using: nil) { (task) in
+         print("BackgroundAppRefreshTaskScheduler is executed NOW!")
+         print("Background time remaining: \(UIApplication.shared.backgroundTimeRemaining)s")
+         task.expirationHandler = {
+           task.setTaskCompleted(success: false)
+         }
+
+ //      Do some data fetching and call setTaskCompleted(success:) asap!
+         let isFetchingSuccess = true
+         task.setTaskCompleted(success: isFetchingSuccess)
+       }
+     }
     
-//    func applicationDidEnterBackground(_ application: UIApplication) {
-//      submitBackgroundTasks()
-//    }
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        print("submit tasks")
+      submitBackgroundTasks()
+    }
     
-//    func submitBackgroundTasks() {
-//      // Declared at the "Permitted background task scheduler identifiers" in info.plist
-//      let backgroundAppRefreshTaskSchedulerIdentifier = "com.example.fooBackgroundAppRefreshIdentifier"
-//      let timeDelay = 10.0
+    func submitBackgroundTasks() {
+      // Declared at the "Permitted background task scheduler identifiers" in info.plist
+      let backgroundAppRefreshTaskSchedulerIdentifier = "get"
+      let timeDelay = 10.0
+
+      do {
+        let backgroundAppRefreshTaskRequest = BGAppRefreshTaskRequest(identifier: backgroundAppRefreshTaskSchedulerIdentifier)
+        backgroundAppRefreshTaskRequest.earliestBeginDate = Date(timeIntervalSinceNow: timeDelay)
+        try BGTaskScheduler.shared.submit(backgroundAppRefreshTaskRequest)
+        print("Submitted task request")
+      } catch {
+        print("Failed to submit BGTask")
+      }
+    }
+    
+//    func putCoordinates(){
 //
-//      do {
-//        let backgroundAppRefreshTaskRequest = BGAppRefreshTaskRequest(identifier: backgroundAppRefreshTaskSchedulerIdentifier)
-//        backgroundAppRefreshTaskRequest.earliestBeginDate = Date(timeIntervalSinceNow: timeDelay)
-//        try BGTaskScheduler.shared.submit(backgroundAppRefreshTaskRequest)
-//        print("Submitted task request")
-//      } catch {
-//        print("Failed to submit BGTask")
-//      }
-//    }
-//    
-    func putCoordinates(){
-        
-        print("running background task")
+//        print("running background task")
 //         let hashnodash = user.hash.replacingOccurrences(of: "-", with: "", options: NSString.CompareOptions.literal, range: nil)
 //        //declare parameter as a dictionary which contains string as key and value combination. considering inputs are valid
 //        print("PUT")
@@ -101,7 +100,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //            }
 //        })
 //        task.resume()
-    }// END PUT
+//    }// END PUT
 
     // MARK: UISceneSession Lifecycle
 
@@ -119,9 +118,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print("discarded")
     }
     
-//    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-//        completionHandler(UNNotificationPresentationOptions.alert)
-//    }
-
 }
 

@@ -13,7 +13,6 @@ import MapKit
 
 class User: ObservableObject {
     var didChange = PassthroughSubject<Void, Never>()
-    
     let hash: String = UIDevice.current.identifierForVendor?.uuidString ?? "hash"
     var initilized = false { didSet{ didChange.send() } }
     
@@ -92,7 +91,7 @@ struct Signup: View {
             print(hashnodash)
             let parameters: [String: String] = ["hash": String(hashnodash),"email": self.email]
             //create the url with URL
-            guard let url = URL(string: "http://192.168.1.64:8000/user")else{return} //change the url
+            guard let url = URL(string: "http://10.10.9.180:8000/user")else{return} //change the url
             //create the session object
             let session = URLSession.shared
             //now create the URLRequest object using the url object
