@@ -485,14 +485,14 @@
 				CODE_SIGN_ENTITLEMENTS = ContactTracer/ContactTracer.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"ContactTracer/Preview Content\"";
-				DEVELOPMENT_TEAM = VT24A7UHNZ;
+				DEVELOPMENT_TEAM = Z3W783TZ96;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = ContactTracer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = NoCap.ContactTracer;
+				PRODUCT_BUNDLE_IDENTIFIER = NoCap.ContactTracer2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -506,14 +506,14 @@
 				CODE_SIGN_ENTITLEMENTS = ContactTracer/ContactTracer.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"ContactTracer/Preview Content\"";
-				DEVELOPMENT_TEAM = VT24A7UHNZ;
+				DEVELOPMENT_TEAM = Z3W783TZ96;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = ContactTracer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = NoCap.ContactTracer;
+				PRODUCT_BUNDLE_IDENTIFIER = NoCap.ContactTracer2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;

@@ -53,20 +53,10 @@ struct Login: View {
     }
     func initilize(){
         
-        getUserData()
-        
         if (initilized != 1){
-            
             print("initial posting")
-            
             UserDefaults.standard.set(1, forKey: "init")
         }
-    }
-    
-    
-    
-    func getUserData(){
-        // initilizes user data
     }
     
 }

@@ -227,10 +227,12 @@ struct Home: View {
                                         .font(.system(size: 25))
                                         
                                 }
-                                if(self.positive){
+                                if(self.positive || self.exposed){
                                     Button(action: {
                                         self.positive = false
+                                        self.exposed = false
                                         UserDefaults.standard.set(false, forKey: "positive")
+                                        UserDefaults.standard.set(false, forKey: "exposed")
                                     }) {
                                         Text("report negative")
                                             .padding(.all, 10)
@@ -276,7 +278,7 @@ struct Home: View {
                     }
                     // COVID-19 report button
                     Button(action: {self.reporting = true}) {
-                        Text("REPORT COVID-19 POSITVE")
+                        Text("REPORT COVID-19 POSITIVE")
                             .font(.headline)
                             .fontWeight(.heavy)
                             .multilineTextAlignment(.center)
@@ -292,7 +294,7 @@ struct Home: View {
                     
                     .alert(isPresented: $reporting) {
                        Alert(
-                           title: Text("WARNING: If you have not been tested for COVID-19 plese press Do not report. Only report that you have COVID-19 if you have been tested and the results are positive."),
+                           title: Text("WARNING: If you have not been tested for COVID-19 please press - Do not report. Only report that you have COVID-19 if you have been tested and the results are positive."),
                            message: Text("Would you like to report your results?"),
                            primaryButton: Alert.Button.default(Text("I am COVID-19 Positive")){
                                iHaveCovid()
