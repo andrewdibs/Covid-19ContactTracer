@@ -191,6 +191,7 @@ struct Home: View {
                                 title: Text("WARNING: You have been in contact with someone who tested positive for the COVID-19 virus. Please take the proper precautions."),
                                 dismissButton: Alert.Button.cancel(Text("Quarentine")){
                                     // take any other action here
+                                    
                                     }
                             )
                         }
