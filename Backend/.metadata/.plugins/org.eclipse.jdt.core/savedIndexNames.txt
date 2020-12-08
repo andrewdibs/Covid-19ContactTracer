@@ -1,3 +1,0 @@
-INDEX VERSION 1.130+C:\Users\Rocco\Desktop\Capping\.metadata\.plugins\org.eclipse.jdt.core
-3337433509.index
-2814863825.index

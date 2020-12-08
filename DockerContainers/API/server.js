@@ -32,7 +32,7 @@ con.connect(function(err){
     console.log("connected");
 });
 
-//connects to email address we are using to send users emails
+//connects to email address we are using to send users and administrators emails
 var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -40,6 +40,13 @@ var transporter = nodemailer.createTransport({
       pass: 'Omannamo!1'
     }
 });
+
+var mailOptions1 = {
+    from: 'contact.tracing.capping@gmail.com',
+    to: 'yafmail@gmail.com',
+    subject: 'DATABASE INCONSISTENCY',
+    text: 'something went wrong'
+};
 
 //Create a user and add to database
 app.post('/user', function (req, res) {
@@ -58,15 +65,44 @@ app.post('/user', function (req, res) {
     
     //sending the sql commands to the database
     con.query(sql, function (err, result) {
-        if(err) throw err;
+        if(err) {
+            console.log('an error occured')
+            mailOptions1.text = String(err);
+            transporter.sendMail(mailOptions1, function(error, info){
+                if (error) {
+                  console.log('email did not work');
+                } else {
+                  console.log('Email sent: ' + info.response);
+                }
+            });
+        }
         console.log("1 table created");
     });
     con.query(sql1, function (err, result) {
-        if(err) throw err;
+        if(err) {
+            mailOptions1.text = String(err);
+            transporter.sendMail(mailOptions1, function(error, info){
+                if (error) {
+                  console.log(error);
+                } else {
+                  console.log('Email sent: ' + info.response);
+                }
+            });
+            return;
+        }
         console.log("1 record inserted");
     });
     con.query(sql2, function (err, result) {
-        if(err) throw err;
+        if(err) {
+            mailOptions1.text = String(err);
+            transporter.sendMail(mailOptions1, function(error, info){
+                if (error) {
+                  console.log(error);
+                } else {
+                  console.log('Email sent: ' + info.response);
+                }
+            });
+        }
         console.log("daily deletion event created");
     });
     res.status(201).send("user created")
@@ -79,7 +115,6 @@ app.put('/user', function (req, res) {
     
     var compromisedValue = 0;
     //sql commands to add users data to specific user table
-    // JOSH CHANGED req.body.healthy to req.body.datetime
     var sql = "INSERT INTO " + req.body.hash + " (hash, x, y, compromised) VALUES ('" + req.body.hash + "', '" + req.body.x + "', '" + req.body.y + "', '" + compromisedValue + "')";
     
     if (req.body.datetime) {
@@ -88,7 +123,16 @@ app.put('/user', function (req, res) {
     
     //sends sql commands to database
     con.query(sql, function (err, result) {
-        if(err) throw err;
+        if(err) {
+            mailOptions1.text = String(err);
+            transporter.sendMail(mailOptions1, function(error, info){
+                if (error) {
+                  console.log(error);
+                } else {
+                  console.log('Email sent: ' + info.response);
+                }
+            });
+        }
         console.log("data inserted");
     });
     res.status(201).send("data logged")
@@ -118,17 +162,46 @@ app.get('/user/:hash', function (req, res) {
 
     //queries the database for compromised values
     con.query(sql, function (err, result) {
-        if(err) throw err;
+        if(err) {
+            mailOptions1.text = String(err);
+            transporter.sendMail(mailOptions1, function(error, info){
+                if (error) {
+                  console.log(error);
+                } else {
+                  console.log('Email sent: ' + info.response);
+                }
+            });
+            res.status(400).send('user not found')
+            return;
+        }
         console.log("data retrieved");
         //if compromised value is found send 202 status to user and then delete compromised value
         if(result.length > 0){
             res.status(202).send("you're not chilln");
             con.query(sql1, function (err1, result1) {
-                if(err1) throw err1;
+                if(err1) {
+                    mailOptions1.text = String(err1);
+                    transporter.sendMail(mailOptions1, function(error, info){
+                        if (error) {
+                          console.log(error);
+                        } else {
+                          console.log('Email sent: ' + info.response);
+                        }
+                    });
+                }
                 console.log("data deleted");
             });
             con.query(sql2, function (err2, result2) {
-                if(err2) throw err2;
+                if(err2) {
+                    mailOptions1.text = String(err2);
+                    transporter.sendMail(mailOptions1, function(error, info){
+                        if (error) {
+                          console.log(error);
+                        } else {
+                          console.log('Email sent: ' + info.response);
+                        }
+                    });
+                }
                 let obj1 = result2[0].email
                 console.log(obj1);
                 mailOptions.to = obj1;
@@ -147,9 +220,9 @@ app.get('/user/:hash', function (req, res) {
     });
 });
 
+//fowards patch information onto the the java backend via http request
 app.patch('/user', function (req, res) {
-    console.log("Finding Infected users");
-    console.log(req.body.hash);
+    console.log("response");
     request({ 
         url: "http://backend:8080/user",
         method: "POST",
@@ -159,9 +232,9 @@ app.patch('/user', function (req, res) {
         time: true
     }, function (err, res1, body) {
         if (!err && res1.statusCode == 200) {
-        // success
+        console.log("patch sent to backend")
         }
-        // failed
+        console.log("patch failed to move to backend")
     });
-    res.status(200).send("success");
+    res.status(200).send("bruh");
 });
