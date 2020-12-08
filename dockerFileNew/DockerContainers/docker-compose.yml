@@ -1,0 +1,31 @@
+version: '3'
+services:
+  node-api:
+    build: ./API
+    command: npm start
+    volumes:
+      #mounting local folder to the container
+      - ./API:/usr/src/app:z
+    ports:
+      - "8000:8000"
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      #Data base properties
+      MYSQL_DATABASE: 'db'
+      MYSQL_USER: 'root'
+      MYSQL_PASSWORD: 'FairView112'
+      MYSQL_ROOT_PASSWORD: 'FairView112'
+    ports:
+      - '3306:8000'
+    volumes:
+      - my-db:/var/lib/mysql
+  backend:
+    build: ./javaRestApp
+    ports:
+      - "8080:8000"
+# Names our volume
+volumes:
+  my-db:
+  
