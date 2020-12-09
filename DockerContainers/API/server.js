@@ -232,9 +232,10 @@ app.patch('/user', function (req, res) {
         time: true
     }, function (err, res1, body) {
         if (!err && res1.statusCode == 200) {
-        console.log("patch sent to backend")
+            console.log("patch sent to backend")
+            return;
         }
         console.log("patch failed to move to backend")
     });
-    res.status(200).send("bruh");
+    res.status(200).send("pushed to backend");
 });

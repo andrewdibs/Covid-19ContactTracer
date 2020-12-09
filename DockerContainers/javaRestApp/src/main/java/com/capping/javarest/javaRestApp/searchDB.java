@@ -32,7 +32,7 @@ public class searchDB
 					//adds the entire database entry into our ArrayList<Users>
 					while (myRs.next()) {
 						//EDIT
-						Users user = new Users(myRs.getString("hash"), myRs.getDouble("x"), myRs.getDouble("y"), myRs.getTimestamp("datetime"), myRs.getInt("compromised"));
+						Users user = new Users(myRs.getString("hash"), myRs.getDouble("x"), myRs.getDouble("y"), myRs.getDate("datetime"), myRs.getInt("compromised"));
 						sickUser.add(user);
 						}			
 				

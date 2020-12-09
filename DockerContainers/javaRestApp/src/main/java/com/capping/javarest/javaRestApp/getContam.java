@@ -13,8 +13,6 @@ public class getContam
 				checked.add(false);
 			}
 			
-			boolean run = true;
-
 			//Instantiate new ArrayList for contaminated users
 			ArrayList<Users> contList = new ArrayList<Users>();
 			
@@ -30,9 +28,6 @@ public class getContam
 						//Check if we've checked this table already
 						if(checked.get(i) == false) 
 						{
-
-							//System.out.println(userList.get(i).get(j) + " is " + (userList.get(i).get(j).getContam()));
-
 							//If the x-value of the healthy and sick user is within .000021 (6ft), go into next loop
 							if(userList.get(i).get(j).getX() - infList.get(k).getX() <= .000021 ||  infList.get(k).getX() - userList.get(i).get(j).getX() >= .000021 && userList.get(i).get(j).getY() - infList.get(k).getY() <= .000016 ||  infList.get(k).getY() - userList.get(i).get(j).getY() >= .000016)
 							{
@@ -46,19 +41,10 @@ public class getContam
 											//if the hashes match, the program does not proceed == 0 WAS ORIGINAL
 											if(userList.get(i).get(j).getHash().compareTo(infList.get(k).getHash()) != 0)
 											{	
-												/*for(int q=0; q < userList.get(i).size(); q++){
-													
-													if(userList.get(i).get(j).getContam() == 1){
-														System.out.println("Am I doing anything?");
-														run = false;
-														q= userList.get(i).size() + 1000000;
-													}
-												}*/
 												if(userList.get(i).get(j).getContam() != 1)										
 												{
 													//Then add that healthy user to the infected list...
-													contList.add(userList.get(i).get(j));
-													
+													contList.add(userList.get(i).get(j));													
 													checked.set(i, true);
 												}									
 											}
